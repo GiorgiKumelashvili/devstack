@@ -11,6 +11,7 @@ export default defineConfig(async () => ({
   resolve: {
     alias: {
       $lib: path.resolve("./src/lib"),
+      $state: path.resolve("./src/state"),
     },
   },
 
