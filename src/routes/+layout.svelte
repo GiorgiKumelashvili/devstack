@@ -11,6 +11,7 @@
   import Sun from "lucide-svelte/icons/sun";
   import Moon from "lucide-svelte/icons/moon";
   import { Button } from "$lib/components/ui/button";
+  import { ChevronLeft, ChevronRight } from "lucide-svelte";
 
   let { children } = $props();
 </script>
@@ -26,6 +27,23 @@
     >
       <div class="flex flex-1 items-center gap-2 px-4">
         <Sidebar.Trigger class="-ml-1" />
+
+        <Button
+          variant="ghost"
+          onclick={() => history.back()}
+          size="icon"
+          class="h-7 w-7"
+        >
+          <ChevronLeft />
+        </Button>
+        <Button
+          variant="ghost"
+          onclick={() => history.forward()}
+          size="icon"
+          class="h-7 w-7"
+        >
+          <ChevronRight />
+        </Button>
 
         <Separator orientation="vertical" class="mr-2 h-4" />
 
