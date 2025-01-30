@@ -3,10 +3,6 @@
   import type { SvelteComponent } from "svelte";
   import type { ComponentMap, GenericCallback } from "../../types";
 
-  // https://colorjs.io/
-  // https://github.com/Qix-/color
-  // https://github.com/gka/chroma.js ++++
-
   const tagImports: ComponentMap = {
     "all-conversions": () => import("./colors/all-conversions.svelte"),
     "pallet-generator": () => import("./colors/pallet-generator.svelte"),
