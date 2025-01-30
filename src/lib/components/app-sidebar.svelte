@@ -1,9 +1,9 @@
 <script lang="ts">
   import NavMain from "$lib/components/nav-main.svelte";
-  import NavUser from "$lib/components/nav-user.svelte";
+  import NavWorkspace from "$lib/components/nav-workspace.svelte";
   import * as Sidebar from "$lib/components/ui/sidebar";
   import type { ComponentProps } from "svelte";
-  import { user, utilItems } from "$state/index";
+  import { utilItems } from "$state/index";
 
   let {
     ref = $bindable(null),
@@ -21,7 +21,7 @@
     <!-- <NavProjects projects={data.projects} /> -->
   </Sidebar.Content>
   <Sidebar.Footer>
-    <NavUser {user} />
+    <NavWorkspace />
   </Sidebar.Footer>
   <Sidebar.Rail />
 </Sidebar.Root>

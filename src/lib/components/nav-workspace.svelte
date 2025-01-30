@@ -5,15 +5,15 @@
   import { useSidebar } from "$lib/components/ui/sidebar";
   import ChevronsUpDown from "lucide-svelte/icons/chevrons-up-down";
 
-  type Props = {
-    user: {
-      name: string;
-      email: string;
-      avatar: string;
-    };
-  };
+  // type Props = {
+  //   user: {
+  //     name: string;
+  //     email: string;
+  //     avatar: string;
+  //   };
+  // };
 
-  let { user }: Props = $props();
+  // let { user }: Props = $props();
   const sidebar = useSidebar();
 </script>
 
@@ -28,12 +28,12 @@
             {...props}
           >
             <Avatar.Root class="h-8 w-8 rounded-lg">
-              <Avatar.Image src={user.avatar} alt={user.name} />
+              <!-- <Avatar.Image src={user.avatar} alt={user.name} /> -->
               <Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
             </Avatar.Root>
             <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-semibold">{user.name}</span>
-              <span class="truncate text-xs">{user.email}</span>
+              <span class="truncate font-semibold">{"asd"}</span>
+              <span class="truncate text-xs">{"asdas"}</span>
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
           </Sidebar.MenuButton>

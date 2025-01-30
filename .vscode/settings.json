@@ -2,6 +2,7 @@
   "svelte.enable-ts-plugin": true,
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   "search.exclude": {
     "**/node_modules": true,
     "**/*.code-search": true,

@@ -1,30 +1,30 @@
 <script lang="ts">
   import "../app.css";
 
-  import AppSidebar from "$lib/components/app-sidebar.svelte";
-  import * as Breadcrumb from "$lib/components/ui/breadcrumb";
-  import { Separator } from "$lib/components/ui/separator";
-  import * as Sidebar from "$lib/components/ui/sidebar";
   import { toggleMode } from "mode-watcher";
   import { ModeWatcher } from "mode-watcher";
+  import { ChevronLeft, ChevronRight, Sun, Moon } from "lucide-svelte";
+  import { page } from "$app/state";
+  import { findTagTitle } from "$state/util-items.svelte";
 
-  import Sun from "lucide-svelte/icons/sun";
-  import Moon from "lucide-svelte/icons/moon";
+  import * as Breadcrumb from "$lib/components/ui/breadcrumb";
+  import * as Sidebar from "$lib/components/ui/sidebar";
+  import AppSidebar from "$lib/components/app-sidebar.svelte";
+  import { Separator } from "$lib/components/ui/separator";
   import { Button } from "$lib/components/ui/button";
-  import { ChevronLeft, ChevronRight } from "lucide-svelte";
+  import { Toaster } from "$lib/components/ui/sonner";
 
   let { children } = $props();
 </script>
 
 <ModeWatcher />
+<Toaster />
 
 <Sidebar.Provider>
   <AppSidebar />
 
   <Sidebar.Inset>
-    <header
-      class="flex h-16 w-full shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
-    >
+    <header class="header">
       <div class="flex flex-1 items-center gap-2 px-4">
         <Sidebar.Trigger class="-ml-1" />
 
@@ -50,14 +50,17 @@
         <Breadcrumb.Root>
           <Breadcrumb.List>
             <Breadcrumb.Item class="hidden md:block">
-              <Breadcrumb.Link href="#">
-                Building Your Application
-              </Breadcrumb.Link>
+              <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
             </Breadcrumb.Item>
-            <Breadcrumb.Separator class="hidden md:block" />
-            <Breadcrumb.Item>
-              <Breadcrumb.Page>Data Fetching</Breadcrumb.Page>
-            </Breadcrumb.Item>
+
+            {#if page.params?.tag}
+              <Breadcrumb.Separator class="hidden md:block" />
+              <Breadcrumb.Item>
+                <Breadcrumb.Page>
+                  {findTagTitle(page.params.tag)}
+                </Breadcrumb.Page>
+              </Breadcrumb.Item>
+            {/if}
           </Breadcrumb.List>
         </Breadcrumb.Root>
 

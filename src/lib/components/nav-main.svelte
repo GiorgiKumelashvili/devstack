@@ -2,23 +2,9 @@
   import * as Collapsible from "$lib/components/ui/collapsible";
   import * as Sidebar from "$lib/components/ui/sidebar";
   import ChevronRight from "lucide-svelte/icons/chevron-right";
+  import type { UtilItem } from "../../types";
 
-  let {
-    items,
-  }: {
-    items: {
-      title: string;
-      url: string;
-      // this should be `Component` after lucide-svelte updates types
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      icon?: any;
-      isActive?: boolean;
-      items?: {
-        title: string;
-        url: string;
-      }[];
-    }[];
-  } = $props();
+  const { items }: { items: UtilItem[] } = $props();
 </script>
 
 <Sidebar.Group>
@@ -52,7 +38,10 @@
                       <Sidebar.MenuSubButton>
                         {#snippet child({ props })}
                           <a href={subItem.url} {...props}>
-                            <span>{subItem.title}</span>
+                            <span>
+                              <span class="text-red-400">#</span>
+                              {subItem.title}</span
+                            >
                           </a>
                         {/snippet}
                       </Sidebar.MenuSubButton>
