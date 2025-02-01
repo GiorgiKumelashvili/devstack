@@ -7,5 +7,9 @@
     "**/node_modules": true,
     "**/*.code-search": true,
     "**/backups": true
+  },
+  "[svelte]": {
+    "togglequotes.chars": ["\"", "'", "`"],
+    "editor.defaultFormatter": "svelte.svelte-vscode"
   }
 }

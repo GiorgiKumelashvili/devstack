@@ -29,8 +29,8 @@
   }
 </script>
 
-<div>{page.params.tag}</div>
-<hr />
+<!-- <div>{page.params.tag}</div>
+<hr /> -->
 
 {#if Component}
   <Component />

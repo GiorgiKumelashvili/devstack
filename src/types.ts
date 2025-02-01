@@ -21,3 +21,5 @@ export type UtilSubItem = {
   url: string;
   tag: string;
 };
+
+export type ClickEvent<T = HTMLDivElement> = MouseEvent & { currentTarget: EventTarget & T }
