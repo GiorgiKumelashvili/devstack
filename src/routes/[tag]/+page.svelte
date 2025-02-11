@@ -2,11 +2,17 @@
   import { page } from "$app/state";
   import type { SvelteComponent } from "svelte";
   import type { ComponentMap, GenericCallback } from "../../types";
+  import { isDevMode } from "../../env";
 
   const tagImports: ComponentMap = {
     "all-conversions": () => import("./colors/all-conversions.svelte"),
     "pallet-generator": () => import("./colors/pallet-generator.svelte"),
     "icons-all": () => import("./icons/icons-all.svelte"),
+
+    ...(isDevMode && {
+      "page-overflow-check": () =>
+        import("./onlydev/page-overflow-check.svelte"),
+    }),
   };
 
   $effect(() => {

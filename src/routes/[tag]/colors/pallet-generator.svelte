@@ -1,49 +1,105 @@
 <script lang="ts">
+  import * as Select from "$lib/components/ui/select/index.js";
   import { Input } from "$lib/components/ui/input";
-  import * as Form from "$lib/components/ui/form";
+  import { AdvancedColorPicker } from "$lib/components/advanced-ui/color-picker";
+  import {
+    exampleColorPalettes,
+    generateComplementary,
+    generateAnalogous,
+    generateTriadic,
+    generateSplitComplementary,
+    generateTetradic,
+    generateMonochromatic,
+    ColorScheme,
+  } from "./color-pallets";
 
-  // import { Input } from "$lib/components/ui/input";
-  // import {
-  //   type SuperValidated,
-  //   type Infer,
-  //   superForm,
-  // } from "sveltekit-superforms";
-  // import { zodClient } from "sveltekit-superforms/adapters";
+  const colorSchemes: { value: ColorScheme; label: string }[] = [
+    { value: ColorScheme.COMPLEMENTARY, label: "Complementary" },
+    { value: ColorScheme.ANALOGOUS, label: "Analogous" },
+    { value: ColorScheme.TRIADIC, label: "Triadic" },
+    { value: ColorScheme.TETRADIC, label: "Tetradic" },
+    { value: ColorScheme.SPLIT_COMPLEMENTARY, label: "Split Complementary" },
+    { value: ColorScheme.MONOCHROMATIC, label: "Monochromatic" },
+  ];
 
-  let test1 = $state(123);
-  let test2 = $state(321);
+  // Example usage:
+  let baseColor = $state("#3498db"); // Base color in hex format
+  let numberOfColors = $state(5); // Desired number of colors in the palette
+  let scheme = $state<ColorScheme>(ColorScheme.ANALOGOUS);
 
-  let form = "" as any;
+  const triggerContent = $derived(
+    colorSchemes.find((f) => f.value === scheme)?.label ?? "Select scheme color"
+  );
+
+  const palett2 = $derived.by(() => {
+    switch (scheme) {
+      case ColorScheme.COMPLEMENTARY:
+        return generateComplementary(baseColor, numberOfColors);
+      case ColorScheme.ANALOGOUS:
+        return generateAnalogous(baseColor, numberOfColors, 70);
+      case ColorScheme.TRIADIC:
+        return generateTriadic(baseColor, numberOfColors);
+      case ColorScheme.TETRADIC:
+        return generateTetradic(baseColor, numberOfColors);
+      case ColorScheme.SPLIT_COMPLEMENTARY:
+        return generateSplitComplementary(baseColor, numberOfColors);
+      case ColorScheme.MONOCHROMATIC:
+        return generateMonochromatic(baseColor, numberOfColors);
+      default:
+        return [];
+    }
+  });
 </script>
 
-<div>
-  <Form.Field {form} name="test1">
-    <Form.Control let:attrs>
-      <Form.Label>Test 1</Form.Label>
-      <Input {...attrs} bind:value={test1} />
-    </Form.Control>
-    <Form.Description>This is your public display name.</Form.Description>
-    <Form.FieldErrors />
-  </Form.Field>
+<br />
 
-  <Form.Field {form} name="test2">
-    <Form.Control let:attrs>
-      <Form.Label>Test 2</Form.Label>
-      <Input {...attrs} bind:value={test2} />
-    </Form.Control>
-    <Form.Description>This is your public display name.</Form.Description>
-    <Form.FieldErrors />
-  </Form.Field>
+<div class="flex">
+  <div>
+    <Input type="number" bind:value={numberOfColors} />
+    <Input type="text" bind:value={baseColor} />
+    <Select.Root type="single" name="favoriteFruit" bind:value={scheme}>
+      <Select.Trigger class="w-[180px]">
+        {triggerContent}
+      </Select.Trigger>
+      <Select.Content>
+        <Select.Group>
+          <Select.GroupHeading>Type</Select.GroupHeading>
+          {#each colorSchemes as fruit}
+            <Select.Item value={fruit.value} label={fruit.label} />
+          {/each}
+        </Select.Group>
+      </Select.Content>
+    </Select.Root>
+  </div>
+
+  <div class="w-64">
+    <AdvancedColorPicker bind:hex={baseColor} />
+  </div>
 </div>
 
-<!-- <form method="POST" use:enhance>
-  <Form.Field {form} name="username">
-    <Form.Control let:attrs>
-      <Form.Label>Username</Form.Label>
-      <Input {...attrs} bind:value={$formData.username} />
-    </Form.Control>
-    <Form.Description>This is your public display name.</Form.Description>
-    <Form.FieldErrors />
-  </Form.Field>
-  <Form.Button>Submit</Form.Button>
-</form> -->
+<br />
+<p class="text-xl">generateColorPalette2</p>
+<hr />
+<br />
+{JSON.stringify(palett2)}
+
+<div class="flex">
+  {#each palett2 as item}
+    <div class="h-9 w-9" style="background-color: {item}"></div>
+  {/each}
+</div>
+
+<br />
+<p class="text-xl">Examples</p>
+<hr />
+<br />
+
+<div>
+  {#each exampleColorPalettes as pallet}
+    <div class="flex mt-3 w-fit border border-white">
+      {#each pallet as color}
+        <div class="h-9 w-9" style="background-color: {color}"></div>
+      {/each}
+    </div>
+  {/each}
+</div>
