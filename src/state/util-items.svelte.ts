@@ -16,6 +16,11 @@ export const utilItems: UtilItem[] = $state([
           title: "Page Overflow Check",
           url: "page-overflow-check",
           tag: 'page-overflow-check'
+        },
+        {
+          title: "Pallet Gen Advanced",
+          url: "pallet-generator-dev",
+          tag: 'pallet-generator-dev'
         }
       ]
     },

@@ -1,3 +1,4 @@
+import { randNumber } from '@ngneat/falso';
 import Color from 'color';
 
 
@@ -10,65 +11,164 @@ export enum ColorScheme {
   MONOCHROMATIC = "MONOCHROMATIC"
 }
 
-
-const interpolate = (color1: Color, color2: Color, t: number): Color => color1.mix(color2, t);
-
-export const generateComplementary = (baseColor: string, steps: number): string[] => {
+/**
+ * Generates a monochromatic color scheme by creating lighter shades of the base color.
+ * 
+ * Returns an array of colors including the base color and `shades` lighter variants.
+ * The number of colors depends on the `shades` parameter.
+ * 
+ * @param baseColor - The base color in any CSS-compatible format.
+ * @param shades - The number of lighter shades to generate (default is 5).
+ * @returns An array of hex color strings.
+ */
+export const generateMonochromatic = (baseColor: string, shades: number = 5): Color[] => {
   const base = Color(baseColor);
-  const comp = base.rotate(180); // The complementary color: rotate by 180°.
+  const palette: Color[] = [base];
 
-  const palette: string[] = [];
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps; // t=0 => base, t=1 => complement
-    const mixedColor = interpolate(base, comp, t);
-    palette.push(mixedColor.hex());
-  }
-  return palette;
-}
-
-export const generateAnalogous = (baseColor: string, n: number, spread: number = 40): string[] => {
-  // spread - The maximum rotation in degrees on each side of the base color (default 40)
-  const base = Color(baseColor);
-
-  if (n <= 1) {
-    return [base.hex()];
+  for (let i = 1; i <= shades; i++) {
+    palette.push(base.lighten(0.1 * i));
   }
 
-  const step = (2 * spread) / (n - 1);
-  const offsets = Array.from({ length: n }, (_, i) => -spread + i * step);
-
-  return offsets.map(e => base.rotate(e).hex());
-}
-
-export const generateTriadic = (baseColor: string, n: number): string[] => {
-  const base = Color(baseColor);
-  const angle = 360 / n;
-  const palette = Array.from({ length: n }, (_, i) => base.rotate(i * angle).hex());
   return palette;
 }
 
-export const generateSplitComplementary = (baseColor: string, n: number): string[] => {
+/**
+ * Generates a complementary color scheme, which consists of two colors:
+ * the base color and the color directly opposite it on the color wheel (180° apart).
+ * 
+ * Always returns exactly **2** colors.
+ * 
+ * @param baseColor - The base color in any CSS-compatible format.
+ * @returns An array containing the base color and its complementary color.
+ */
+export const generateComplementary = (baseColor: string): [Color, Color] => {
   const base = Color(baseColor);
-  const angle = 360 / (n + 1); // Exclude the base color's position
-  const palette = Array.from({ length: n }, (_, i) => base.rotate((i + 1) * angle).hex());
+  return [base, base.rotate(180)];
+}
+
+/**
+ * Generates a split-complementary color scheme, which includes the base color
+ * and two colors adjacent to its complement.
+ * 
+ * Always returns exactly **3** colors.
+ * 
+ * @param baseColor - The base color in any CSS-compatible format.
+ * @returns An array containing the base color and its split-complementary colors.
+ */
+export const generateSplitComplementary = (baseColor: string): [Color, Color, Color] => {
+  const base = Color(baseColor);
+  return [base, base.rotate(150), base.rotate(210)];
+}
+
+/**
+ * Generates a triadic color scheme, consisting of three colors evenly spaced (120° apart).
+ * 
+ * Always returns exactly **3** colors.
+ * 
+ * @param baseColor - The base color in any CSS-compatible format.
+ * @returns An array containing the base color and its two triadic counterparts.
+ */
+export const generateTriadic = (baseColor: string): [Color, Color, Color] => {
+  const base = Color(baseColor);
+  return [base, base.rotate(120), base.rotate(240)];
+}
+
+/**
+ * Generates a tetradic color scheme, forming a rectangle on the color wheel with four colors.
+ * 
+ * Always returns exactly **4** colors.
+ * 
+ * @param baseColor - The base color in any CSS-compatible format.
+ * @returns An array containing the base color and its three tetradic counterparts.
+ */
+export const generateTetradic = (baseColor: string): [Color, Color, Color, Color] => {
+  const base = Color(baseColor);
+  return [base, base.rotate(90), base.rotate(180), base.rotate(270)];
+}
+
+/**
+ * Generates an analogous color scheme by selecting colors adjacent to the base color on the color wheel.
+ * 
+ * Typically returns **3-5** colors depending on the `count` parameter.
+ * 
+ * @param baseColor - The base color in any CSS-compatible format.
+ * @param count - The number of analogous colors to generate (default is 3).
+ * @returns An array containing the base color and its analogous colors.
+ */
+export const generateAnalogous = (baseColor: string, count: number = 3): Color[] => {
+  if (count < 3 || count > 5) {
+    throw new Error("Count must be between 3 and 5.");
+  }
+
+  const base = Color(baseColor);
+  const angle = 30; // Degrees between analogous colors
+  const palette: Color[] = [base];
+
+  for (let i = 1; i < count; i++) {
+    palette.push(base.rotate(angle * i));
+  }
+
   return palette;
 }
 
-export const generateTetradic = (baseColor: string, n: number): string[] => {
+/**
+ * Generates a square color scheme, with four colors evenly spaced around the color wheel (90° apart).
+ * 
+ * Always returns exactly **4** colors.
+ * 
+ * @param baseColor - The base color in any CSS-compatible format.
+ * @returns An array containing the base color and its three square counterparts.
+ */
+export const generateSquare = (baseColor: string): [Color, Color, Color, Color] => {
   const base = Color(baseColor);
-  const angle = 360 / n;
-  const palette = Array.from({ length: n }, (_, i) => base.rotate(i * angle).hex());
-  return palette;
+  return [base, base.rotate(90), base.rotate(180), base.rotate(270)];
 }
 
-export const generateMonochromatic = (baseColor: string, n: number, minLightness: number = 30, maxLightness: number = 90): string[] => {
-  const base = Color(baseColor);
-  const palette = Array.from({ length: n }, (_, i) => {
-    const lightness = minLightness + (i * (maxLightness - minLightness)) / (n - 1);
-    return base.lightness(lightness).hex();
-  });
+
+export const generateRandomBalancedPalette = (count: number): Color[] => {
+  if (count <= 0) return []; // Guard clause for invalid count
+
+  // Generate random min/max ranges for saturation and lightness
+  const MIN_SAT = randNumber({ min: 0, max: 50 });
+  const MAX_SAT = randNumber({ min: MIN_SAT, max: 100 });
+
+  const MIN_LIGHT = randNumber({ min: 0, max: 50 });
+  const MAX_LIGHT = randNumber({ min: MIN_LIGHT, max: 100 });
+
+  const palette: Color[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = MIN_SAT + Math.random() * (MAX_SAT - MIN_SAT);
+    const lightness = MIN_LIGHT + Math.random() * (MAX_LIGHT - MIN_LIGHT);
+
+    palette.push(Color.hsl(hue, saturation, lightness));
+  }
+
   return palette;
-}
+};
+
+export const generateShades = (baseColor: string, steps: number = 30): Color[] => {
+  // Convert the base color to HSL so we can extract the hue and saturation.
+  const baseHSL = Color(baseColor).hsl();
+  const { h, s } = baseHSL.object();
+
+  const colors: Color[] = [];
+
+  // Generate shades from light (white) to dark (black)
+  for (let i = 0; i < steps; i++) {
+    // Compute lightness so that:
+    // i = 0 gives 100% lightness (white) and
+    // i = steps - 1 gives 0% lightness (black)
+    const lightness = 100 - (i * 100) / (steps - 1);
+
+    // Create a new color with the same hue and saturation but varying lightness
+    const newColor = Color.hsl(h, s, lightness);
+    colors.push(newColor);
+  }
+
+  return colors;
+};
 
 
 export const exampleColorPalettes = [

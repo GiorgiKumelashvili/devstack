@@ -2,11 +2,10 @@
   import type converts from "color-convert";
 
   import Color from "color";
-  import { toast } from "svelte-sonner";
 
   import * as Tabs from "$lib/components/ui/tabs";
   import * as Card from "$lib/components/ui/card";
-  import { roundFloat } from "$lib/utils";
+  import { roundFloat, successToast } from "$lib/utils";
   import { Label } from "$lib/components/ui/label";
   import { AdvancedInput } from "$lib/components/advanced-ui/input";
   import { AdvancedColorPicker } from "$lib/components/advanced-ui/color-picker";
@@ -20,11 +19,7 @@
   const copyColor = (e?: ClickEvent<HTMLButtonElement>) => {
     e?.currentTarget?.blur();
     navigator.clipboard.writeText(color);
-    toast.success(`Copied to clipboard ${color}`, {
-      position: "top-right",
-      dismissable: true,
-      cancel: { label: "Close" },
-    });
+    successToast(`Copied to clipboard ${color}`);
   };
 
   const formatOutput = (color: Color<string>, model: keyof typeof converts) => {

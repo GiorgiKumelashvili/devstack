@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
+import { toast } from "svelte-sonner";
 import type { TransitionConfig } from "svelte/transition";
 
 export function cn(...inputs: ClassValue[]) {
@@ -63,4 +64,12 @@ export const flyAndScale = (
 
 export function roundFloat(value: number, precision: number) {
   return Math.round(value * 10 ** precision) / 10 ** precision;
+}
+
+export const successToast = (message: string) => {
+  toast.success(message, {
+    position: "top-right",
+    dismissable: true,
+    cancel: { label: "Close" },
+  });
 }

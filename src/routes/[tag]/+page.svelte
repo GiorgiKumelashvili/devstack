@@ -12,6 +12,8 @@
     ...(isDevMode && {
       "page-overflow-check": () =>
         import("./onlydev/page-overflow-check.svelte"),
+      "pallet-generator-dev": () =>
+        import("./onlydev/pallet-generator-dev.svelte"),
     }),
   };
 
