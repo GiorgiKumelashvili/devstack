@@ -39,6 +39,7 @@
                         {#snippet child({ props })}
                           <a href={subItem.url} {...props}>
                             <span>
+                              <!-- <span class="text-primary">#</span> -->
                               <span class="text-red-400">#</span>
                               {subItem.title}</span
                             >

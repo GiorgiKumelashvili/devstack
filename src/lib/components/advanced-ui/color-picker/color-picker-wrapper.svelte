@@ -34,7 +34,7 @@
   }
 
   .wrapper {
-    @apply bg-card text-card-foreground h-fit flex-1 w-full;
+    @apply bg-card text-card-foreground h-fit flex-1 w-full rounded-[9px];
 
     --picker-width: 100%;
     --text-input-margin: 5px;
