@@ -3,7 +3,15 @@
 
   import { toggleMode } from "mode-watcher";
   import { ModeWatcher } from "mode-watcher";
-  import { ChevronLeft, ChevronRight, Sun, Moon } from "lucide-svelte";
+  import {
+    ChevronLeft,
+    ChevronRight,
+    Sun,
+    Moon,
+    House,
+    Home,
+    Settings,
+  } from "lucide-svelte";
   import { page } from "$app/state";
   import { findTagTitle } from "$state/util-items.svelte";
 
@@ -64,25 +72,27 @@
           </Breadcrumb.List>
         </Breadcrumb.Root>
 
-        <Button
-          onclick={() => toggleMode()}
-          variant="outline"
-          size="icon"
-          class="ml-auto h-7 w-7"
-        >
-          <Sun
-            class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
-          />
-          <Moon
-            class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-          />
-          <span class="sr-only">Toggle theme</span>
-        </Button>
+        <div class="ml-auto">
+          <Button
+            onclick={() => toggleMode()}
+            variant="outline"
+            size="icon"
+            class="h-7 w-7 ml-2"
+          >
+            <Sun
+              class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+            />
+            <Moon
+              class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+            />
+            <span class="sr-only">Toggle theme</span>
+          </Button>
+        </div>
       </div>
     </header>
 
     <!-- Root body -->
-    <div class="p-4 pt-0 h-full overflow-y-auto">
+    <div class="p-4 pt-[1px] h-full overflow-y-auto">
       {@render children()}
     </div>
   </Sidebar.Inset>

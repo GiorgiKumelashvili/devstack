@@ -11,7 +11,7 @@
     generateSplitComplementary,
     generateMonochromatic,
     exampleColorPalettes,
-  } from "../colors/color-pallets";
+  } from "../colors/utils/color-palette";
 
   const colorSchemes: { value: ColorScheme; label: string }[] = [
     { value: ColorScheme.COMPLEMENTARY, label: "Complementary" },
@@ -95,9 +95,9 @@
 <br />
 
 <div>
-  {#each exampleColorPalettes as pallet}
+  {#each exampleColorPalettes as palette}
     <div class="flex mt-3 w-fit border border-white">
-      {#each pallet as color}
+      {#each palette as color}
         <div class="h-9 w-9" style="background-color: {color}"></div>
       {/each}
     </div>

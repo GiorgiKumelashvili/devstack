@@ -33,7 +33,7 @@
     "@types/color": "^4.2.0",
     "@types/node": "^22.10.5",
     "autoprefixer": "^10.4.20",
-    "bits-ui": "^1.0.0-next.82",
+    "bits-ui": "^1.1.0",
     "clsx": "^2.1.1",
     "formsnap": "^1.0.1",
     "lucide-svelte": "^0.471.0",

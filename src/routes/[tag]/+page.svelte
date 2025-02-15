@@ -3,17 +3,18 @@
   import type { SvelteComponent } from "svelte";
   import type { ComponentMap, GenericCallback } from "../../types";
   import { isDevMode } from "../../env";
+  import { CircleAlert } from "lucide-svelte";
 
   const tagImports: ComponentMap = {
     "all-conversions": () => import("./colors/all-conversions.svelte"),
-    "pallet-generator": () => import("./colors/pallet-generator.svelte"),
+    "palette-generator": () => import("./colors/palette-generator.svelte"),
     "icons-all": () => import("./icons/icons-all.svelte"),
 
     ...(isDevMode && {
       "page-overflow-check": () =>
         import("./onlydev/page-overflow-check.svelte"),
-      "pallet-generator-dev": () =>
-        import("./onlydev/pallet-generator-dev.svelte"),
+      "palette-generator-dev": () =>
+        import("./onlydev/palette-generator-dev.svelte"),
     }),
   };
 
@@ -35,6 +36,16 @@
       Component = null; // Handle error gracefully
     }
   }
+
+  let showElse = $state(false);
+
+  $effect(() => {
+    showElse = false;
+
+    setTimeout(() => {
+      showElse = true;
+    }, 1000);
+  });
 </script>
 
 <!-- <div>{page.params.tag}</div>
@@ -42,6 +53,9 @@
 
 {#if Component}
   <Component />
-{:else}
-  <p>Loading or invalid component...</p>
+{:else if showElse}
+  <p class="flex gap-3 items-center">
+    <CircleAlert />
+    Loading issue
+  </p>
 {/if}

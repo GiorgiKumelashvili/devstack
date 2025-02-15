@@ -1,11 +1,6 @@
 <script lang="ts">
   import Color from "color";
-  import { Button } from "$lib/components/ui/button";
   import { randHex } from "@ngneat/falso";
-  import {
-    generateRandomBalancedPalette,
-    generateShades,
-  } from "./color-pallets";
   import {
     Copy,
     LockOpen,
@@ -17,7 +12,13 @@
   } from "lucide-svelte";
 
   import { cn, successToast } from "$lib/utils";
+  import { Button } from "$lib/components/ui/button";
   import PaletteButton from "$lib/components/advanced-ui/button/palette-button.svelte";
+  import PaletteGeneratorModal from "./components/palette-generator-modal.svelte";
+  import {
+    generateRandomBalancedPalette,
+    generateShades,
+  } from "./utils/color-palette";
 
   type PaletteItem = {
     color: Color;
@@ -41,6 +42,7 @@
 
   let tempShades = $state<Color[]>([]);
   const isShadeChoosingMode = $derived.by(() => tempShades.length > 0);
+  let isExportModalOpen = $state(false);
 
   const regenerate = (existingColor?: string) => {
     if (existingColor) {
@@ -94,7 +96,6 @@
     palette[foundIndex].choosingShade = true;
 
     const colorForShade = palette[foundIndex].color;
-    const backupColorForShade = palette[foundIndex].backupColorForShade;
 
     tempShades.length = 0;
     tempShades.push(...generateShades(colorForShade.hex()));
@@ -109,15 +110,46 @@
     palette[foundIndex].choosingShade = false;
     palette[foundIndex].color = Color(newColor);
   };
+
+  const handleSpacebar = (event: KeyboardEvent) => {
+    if (event.code === "Space") {
+      event.preventDefault(); // Prevents page scrolling
+      regenerate();
+    }
+  };
+
+  $effect(() => {
+    if (isExportModalOpen) {
+      console.log("removed");
+
+      document.removeEventListener("keydown", handleSpacebar);
+    } else {
+      // Add the event listener when the component mounts
+      document.addEventListener("keydown", handleSpacebar);
+    }
+
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("keydown", handleSpacebar);
+    };
+  });
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 
 <div class="flex flex-col h-full gap-2">
-  <div>
+  <div class="flex gap-3 items-center">
+    <PaletteGeneratorModal
+      colors={palette.map((e) => e.color)}
+      bind:isExportModalOpen
+      triggerButtonId="trigger-button-id"
+    />
+
     <Button onclick={() => regenerate()} size="icon" variant="outline">
       <RefreshCcw />
     </Button>
+
+    <h1 class="text-primary/50">Press spacebar to regenrate colors</h1>
   </div>
 
   <div class="h-screen flex flex-wrap">
@@ -212,6 +244,8 @@
 </div>
 
 <!--TODO
+get back color after removed create or add new one at least
+
 <PaletteButton colorHex={item.color.hex()} class="cursor-grab active:cursor-grabbing focus-visible:cursor-grabbing">
   <MoveHorizontal size={20} />
 </PaletteButton> 

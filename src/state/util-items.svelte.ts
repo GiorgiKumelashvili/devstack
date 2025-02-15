@@ -18,9 +18,9 @@ export const utilItems: UtilItem[] = $state([
           tag: 'page-overflow-check'
         },
         {
-          title: "Pallet Gen Advanced",
-          url: "pallet-generator-dev",
-          tag: 'pallet-generator-dev'
+          title: "palette Gen Advanced",
+          url: "palette-generator-dev",
+          tag: 'palette-generator-dev'
         }
       ]
     },
@@ -38,9 +38,9 @@ export const utilItems: UtilItem[] = $state([
         tag: "all-conversions",
       },
       {
-        title: "Pallet generator",
-        url: "pallet-generator",
-        tag: "pallet-generator",
+        title: "palette generator",
+        url: "palette-generator",
+        tag: "palette-generator",
       },
     ],
   },
