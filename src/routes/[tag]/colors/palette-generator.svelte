@@ -42,6 +42,7 @@
 
   let tempShades = $state<Color[]>([]);
   const isShadeChoosingMode = $derived.by(() => tempShades.length > 0);
+  const triggerButtonId = "trigger-button-id";
   let isExportModalOpen = $state(false);
 
   const regenerate = (existingColor?: string) => {
@@ -120,10 +121,11 @@
 
   $effect(() => {
     if (isExportModalOpen) {
-      console.log("removed");
-
       document.removeEventListener("keydown", handleSpacebar);
     } else {
+      // after closing modal with clicking escape button unfocus trigger button
+      setTimeout(() => document.getElementById(triggerButtonId)?.blur(), 0);
+
       // Add the event listener when the component mounts
       document.addEventListener("keydown", handleSpacebar);
     }
@@ -142,7 +144,7 @@
     <PaletteGeneratorModal
       colors={palette.map((e) => e.color)}
       bind:isExportModalOpen
-      triggerButtonId="trigger-button-id"
+      {triggerButtonId}
     />
 
     <Button onclick={() => regenerate()} size="icon" variant="outline">

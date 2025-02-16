@@ -42,15 +42,22 @@
           const format = `[${form.data.items.map((e) => e.hex()).join(",")}]`;
           navigator.clipboard.writeText(format);
           successToast(`Copied to clipboard`);
-
           isExportModalOpen = false;
-          document.getElementById("triggerButtonId")?.blur();
         },
       }
     );
   };
 
+  const onCheckChange = (value: boolean, color: Color) => {
+    if (value) {
+      $formData.items = [...$formData.items, color];
+    } else {
+      $formData.items = $formData.items.filter((i) => i.hex() !== color.hex());
+    }
+  };
+
   let form = $state(getForm(colors));
+  let formData = $derived.by(() => form.form);
 
   $effect(() => {
     form = getForm(colors);
@@ -63,16 +70,6 @@
       }
     });
   });
-
-  const onCheckChange = (value: boolean, color: Color) => {
-    if (value) {
-      $formData.items = [...$formData.items, color];
-    } else {
-      $formData.items = $formData.items.filter((i) => i.hex() !== color.hex());
-    }
-  };
-
-  let formData = $derived.by(() => form.form);
 </script>
 
 <Dialog.Root
@@ -82,6 +79,7 @@
   <Dialog.Trigger
     class={buttonVariants({ variant: "outline" })}
     id={triggerButtonId}
+    tabindex={-1}
   >
     Export
   </Dialog.Trigger>
