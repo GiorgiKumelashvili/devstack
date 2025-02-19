@@ -1,15 +1,26 @@
 <script lang="ts">
   import type converts from "color-convert";
-
   import Color from "color";
 
   import * as Tabs from "$lib/components/ui/tabs";
   import * as Card from "$lib/components/ui/card";
-  import { roundFloat, successToast } from "$lib/utils";
   import { Label } from "$lib/components/ui/label";
   import { AdvancedInput } from "$lib/components/advanced-ui/input";
   import { AdvancedColorPicker } from "$lib/components/advanced-ui/color-picker";
+  import { roundFloat, successToast } from "$lib/utils";
+
   import type { ClickEvent } from "../../../types";
+  import ColorInformationCard from "./components/color-information-card.svelte";
+  import {
+    generateAnalogous,
+    generateComplementary,
+    generateMonochromatic,
+    generateSplitComplementary,
+    generateTetradic,
+    generateTriadic,
+  } from "./utils/color-palette";
+
+  type ColorModel = keyof typeof converts | "hexa";
 
   let color = $state("#8683d5");
   let colorInstance = $derived(Color(color));
@@ -17,12 +28,30 @@
   let colorConversionError = $state("");
 
   const copyColor = (e?: ClickEvent<HTMLButtonElement>) => {
-    e?.currentTarget?.blur();
     navigator.clipboard.writeText(color);
     successToast(`Copied to clipboard ${color}`);
   };
 
-  const formatOutput = (color: Color<string>, model: keyof typeof converts) => {
+  const setColor = (v: string) => {
+    colorConversionError = "";
+
+    // necessary to be before setting new color
+    try {
+      Color(v);
+    } catch (error) {
+      console.log("*".repeat(20));
+      console.log(error);
+      colorConversionError = "Invalid color code";
+    }
+
+    // necessary to update input, otherwise it causes weird behavior
+    color = v;
+  };
+
+  const formatOutput = (color: Color<string>, model: ColorModel) => {
+    if (model === "hex") return color.hex().toString();
+    if (model === "hexa") return color.hexa().toString();
+
     const specificColor = color[model]() as Color<string>;
     const arr = specificColor.array();
 
@@ -57,7 +86,29 @@
         throw new Error("Invalid model");
     }
   };
+
+  const analogous = $derived(generateAnalogous(color));
+  const monochromatic = $derived(generateMonochromatic(color));
+  const complementary = $derived(generateComplementary(color));
+  const splitComplementary = $derived(generateSplitComplementary(color));
+  const triadic = $derived(generateTriadic(color));
+  const tetradic = $derived(generateTetradic(color));
 </script>
+
+{#snippet ColorInputItem({
+  title,
+  model,
+}: {
+  title: string;
+  model: ColorModel;
+})}
+  <div class="flex-1">
+    <Label class="block pb-1.5 opacity-85 font-bold text-red-400">
+      {title}
+    </Label>
+    <AdvancedInput value={formatOutput(colorInstance, model)} readonly />
+  </div>
+{/snippet}
 
 <div class="flex gap-4">
   <Tabs.Root value="color-picker" class="w-[400px]">
@@ -67,7 +118,7 @@
     </Tabs.List>
 
     <Tabs.Content value="input">
-      <Card.Root>
+      <Card.Root class="h-[420px]">
         <div class="flex p-6 pb-0 flex-row justify-between">
           <div class="flex flex-col">
             <Card.Title>Input color code</Card.Title>
@@ -89,22 +140,7 @@
         <Card.Content>
           <AdvancedInput
             bind:setErrorMessage={colorConversionError}
-            bind:value={() => color,
-            (v) => {
-              colorConversionError = "";
-
-              // necessary to be before setting new color
-              try {
-                Color(v);
-              } catch (error) {
-                console.log("*".repeat(20));
-                console.log(error);
-                colorConversionError = "Invalid color code";
-              }
-
-              // necessary to update input, otherwise it causes weird behavior
-              color = v;
-            }}
+            bind:value={() => color, (v) => setColor(v)}
           />
 
           <Card.Description class="pt-1.5 pl-0.5">
@@ -115,7 +151,7 @@
     </Tabs.Content>
 
     <Tabs.Content value="color-picker">
-      <Card.Root>
+      <Card.Root class="h-[420px]">
         <Card.Header>
           <Card.Title>Picker</Card.Title>
         </Card.Header>
@@ -129,80 +165,73 @@
     </Tabs.Content>
   </Tabs.Root>
 
-  <Card.Root class="h-fit flex-1">
+  <Card.Root class="flex-1">
     <Card.Header>
       <Card.Title class="text-2xl">Output</Card.Title>
     </Card.Header>
 
     <Card.Content class="flex gap-4">
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">RGBA</Label>
-        <AdvancedInput value={formatOutput(colorInstance, "rgb")} readonly />
-      </div>
-
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">CMYK</Label>
-        <AdvancedInput value={formatOutput(colorInstance, "cmyk")} readonly />
-      </div>
-
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">HSLA</Label>
-        <AdvancedInput value={formatOutput(colorInstance, "hsl")} readonly />
-      </div>
+      {@render ColorInputItem({ title: "RGBA", model: "rgb" })}
+      {@render ColorInputItem({ title: "CMYK", model: "cmyk" })}
+      {@render ColorInputItem({ title: "HSLA", model: "hsl" })}
     </Card.Content>
 
     <Card.Content class="flex gap-4 pt-0">
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">HEX</Label>
-        <AdvancedInput value={colorInstance.hex().toString()} readonly />
-      </div>
-
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">HEXA</Label>
-        <AdvancedInput value={colorInstance.hexa().toString()} readonly />
-      </div>
-
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">HSV</Label>
-        <AdvancedInput value={formatOutput(colorInstance, "hsv")} readonly />
-      </div>
+      {@render ColorInputItem({ title: "HEX", model: "hex" })}
+      {@render ColorInputItem({ title: "HEXA", model: "hexa" })}
+      {@render ColorInputItem({ title: "HSV", model: "hsv" })}
     </Card.Content>
 
     <Card.Content class="flex gap-4 pt-0">
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">LCHA</Label>
-        <AdvancedInput value={formatOutput(colorInstance, "lch")} readonly />
-      </div>
-
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">LAB</Label>
-        <AdvancedInput value={formatOutput(colorInstance, "lab")} readonly />
-      </div>
-
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">HCGA</Label>
-        <AdvancedInput value={formatOutput(colorInstance, "hcg")} readonly />
-      </div>
+      {@render ColorInputItem({ title: "LCHA", model: "lch" })}
+      {@render ColorInputItem({ title: "LAB", model: "lab" })}
+      {@render ColorInputItem({ title: "HCGA", model: "hcg" })}
     </Card.Content>
 
     <Card.Content class="flex gap-4 pt-0">
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">ANSI16</Label>
-        <AdvancedInput value={formatOutput(colorInstance, "ansi16")} readonly />
-      </div>
-
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">ANSI256</Label>
-        <AdvancedInput
-          value={formatOutput(colorInstance, "ansi256")}
-          readonly
-        />
-      </div>
-
-      <div class="flex-1">
-        <Label class="block pb-1.5 opacity-85">HWBA</Label>
-        <AdvancedInput value={formatOutput(colorInstance, "hwb")} readonly />
-      </div>
+      {@render ColorInputItem({ title: "ANSI16", model: "ansi16" })}
+      {@render ColorInputItem({ title: "ANSI256", model: "ansi256" })}
+      {@render ColorInputItem({ title: "HWBA", model: "hwb" })}
     </Card.Content>
   </Card.Root>
+</div>
+
+<div class="flex gap-4 mt-4">
+  <ColorInformationCard
+    cardClass="w-[400px]"
+    hexValues={analogous}
+    title="Analogous"
+  />
+
+  <ColorInformationCard
+    cardClass="flex-1"
+    hexValues={monochromatic}
+    title="Monochromatic"
+  />
+
+  <ColorInformationCard
+    cardClass="flex-1"
+    hexValues={complementary}
+    title="Complementary"
+  />
+</div>
+
+<div class="flex gap-4 mt-4">
+  <ColorInformationCard
+    cardClass="w-[400px]"
+    hexValues={splitComplementary}
+    title="Split Complementary"
+  />
+
+  <ColorInformationCard
+    cardClass="flex-1"
+    hexValues={triadic}
+    title="Triadic"
+  />
+
+  <ColorInformationCard
+    cardClass="flex-1"
+    hexValues={tetradic}
+    title="Tetradic"
+  />
 </div>

@@ -1,11 +1,10 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from "svelte/elements";
-
   import { toast } from "svelte-sonner";
-  import { Copy, CopyCheck } from "lucide-svelte";
 
-  import { Button } from "$lib/components/ui/button";
   import { Input } from "$lib/components/ui/input";
+  import CopyIconButton from "$lib/components/advanced-ui/button/copy-icon-button.svelte";
+
   import type { ClickEvent } from "../../../../types";
 
   type Props = HTMLInputAttributes & {
@@ -52,20 +51,9 @@
     <p class="text-red-600">{setErrorMessage}</p>
   {/if}
 
-  <Button
-    variant="ghost"
-    size="icon"
-    class="h-7 w-7 absolute top-1/2 -translate-y-1/2 right-1"
+  <CopyIconButton
     onclick={clickCopyButton}
-  >
-    {#if copyClick}
-      <CopyCheck
-        class="h-[0.5rem] w-[0.5rem] rotate-0 scale-55 transition-all"
-      />
-    {:else}
-      <Copy class="h-[0.5rem] w-[0.5rem] rotate-0 scale-55 transition-all" />
-    {/if}
-
-    <span class="sr-only">Toggle theme</span>
-  </Button>
+    isCopyIconActive={copyClick}
+    class="absolute top-1/2 -translate-y-1/2 right-1"
+  />
 </div>

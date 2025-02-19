@@ -9,12 +9,15 @@
     SwatchBook,
     X,
     CopyCheck,
+    Undo2,
   } from "lucide-svelte";
 
-  import { cn, successToast } from "$lib/utils";
-  import { Button } from "$lib/components/ui/button";
   import PaletteButton from "$lib/components/advanced-ui/button/palette-button.svelte";
-  import PaletteGeneratorModal from "./components/palette-generator-modal.svelte";
+  import { Button } from "$lib/components/ui/button";
+  import { cn, successToast } from "$lib/utils";
+
+  import PaletteGeneratorModal from "./components/color-palette-generator-modal.svelte";
+  import ColorPaletteExamplesSheet from "./components/color-palette-examples-sheet.svelte";
   import {
     generateRandomBalancedPalette,
     generateShades,
@@ -41,9 +44,10 @@
   );
 
   let tempShades = $state<Color[]>([]);
+  let isExportModalOpen = $state(false);
+  let deletedColors = $state<{ color: string; lastIndex: number }[]>([]);
   const isShadeChoosingMode = $derived.by(() => tempShades.length > 0);
   const triggerButtonId = "trigger-button-id";
-  let isExportModalOpen = $state(false);
 
   const regenerate = (existingColor?: string) => {
     if (existingColor) {
@@ -66,7 +70,7 @@
     });
   };
 
-  const copyHex = (color: string, animation?: boolean) => {
+  const copyColor = (color: string, animation?: boolean) => {
     navigator.clipboard.writeText(color.toString());
     successToast(`Copied to clipboard ${color.toString()}`);
 
@@ -79,8 +83,33 @@
     }
   };
 
-  const removeColor = (color: string) => {
+  const copyAllTogether = () => {
+    const format = `[${palette.map((e) => `"${e.color.hex()}"`).join(",")}]`;
+    navigator.clipboard.writeText(format);
+    successToast(`Copied to clipboard`);
+  };
+
+  const removeColor = (color: string, index: number) => {
     palette = palette.filter((item) => item.color.hex() !== color);
+    deletedColors.push({ color, lastIndex: index });
+  };
+
+  const undoColor = () => {
+    const item = deletedColors.pop(); // get last element always
+
+    if (!item || palette.length >= 5) {
+      return;
+    }
+
+    //TODO after reordering is added here add correct order and recalculate for others
+    palette.splice(item.lastIndex, 0, {
+      backupColorForShade: Color(item.color),
+      color: Color(item.color),
+      choosingShade: false,
+      isCopied: false,
+      locked: false,
+      order: item.lastIndex,
+    });
   };
 
   const lockColor = (color: string) => {
@@ -96,7 +125,7 @@
 
     palette[foundIndex].choosingShade = true;
 
-    const colorForShade = palette[foundIndex].color;
+    const colorForShade = palette[foundIndex].backupColorForShade;
 
     tempShades.length = 0;
     tempShades.push(...generateShades(colorForShade.hex()));
@@ -140,22 +169,32 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 
 <div class="flex flex-col h-full gap-2">
-  <div class="flex gap-3 items-center">
+  <div class="flex gap-1.5 items-center">
     <PaletteGeneratorModal
       colors={palette.map((e) => e.color)}
       bind:isExportModalOpen
       {triggerButtonId}
     />
 
+    <Button onclick={copyAllTogether} variant="outline">Copy All</Button>
+
     <Button onclick={() => regenerate()} size="icon" variant="outline">
       <RefreshCcw />
     </Button>
 
-    <h1 class="text-primary/50">Press spacebar to regenrate colors</h1>
+    <Button onclick={() => undoColor()} size="icon" variant="outline">
+      <Undo2 />
+    </Button>
+
+    <ColorPaletteExamplesSheet />
+
+    <h1 class="text-primary/50 select-none">
+      Press spacebar to regenerate colors
+    </h1>
   </div>
 
   <div class="h-screen flex flex-wrap">
-    {#each palette as item}
+    {#each palette as item, index}
       <div
         class="h-full min-h-full relative flex-1 overflow-hidden"
         style="background-color: {item.color.hex()}"
@@ -163,7 +202,7 @@
         {#if !item.choosingShade}
           <div
             class="absolute bottom-10 left-1/2 -translate-x-1/2"
-            onclick={() => copyHex(item.color.hex())}
+            onclick={() => copyColor(item.color.hex())}
             role="button"
             tabindex="0"
           >
@@ -183,7 +222,7 @@
             >
               <PaletteButton
                 colorHex={item.color.hex()}
-                onclick={() => removeColor(item.color.hex())}
+                onclick={() => removeColor(item.color.hex(), index)}
               >
                 <X size={22} />
               </PaletteButton>
@@ -204,7 +243,7 @@
 
               <PaletteButton
                 colorHex={item.color.hex()}
-                onclick={() => copyHex(item.color.hex(), true)}
+                onclick={() => copyColor(item.color.hex(), true)}
               >
                 {#if item.isCopied}
                   <CopyCheck size={20} />

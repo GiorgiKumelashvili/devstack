@@ -8,7 +8,7 @@
 <div class="flex gap-3">
   <Card.Root
     class="w-28 h-28 cursor-pointer hover:bg-primary/10 select-none"
-    onclick={() => goto("/all-conversions")}
+    onclick={() => goto("/color-information")}
   >
     <Card.Header>
       <PaintBucket />

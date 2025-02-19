@@ -1,7 +1,6 @@
 import { randNumber } from '@ngneat/falso';
 import Color from 'color';
 
-
 export enum ColorScheme {
   COMPLEMENTARY = "COMPLEMENTARY",
   ANALOGOUS = "ANALOGOUS",
@@ -22,14 +21,34 @@ export enum ColorScheme {
  * @returns An array of hex color strings.
  */
 export const generateMonochromatic = (baseColor: string, shades: number = 5): Color[] => {
-  const base = Color(baseColor);
-  const palette: Color[] = [base];
+  const instance = Color(baseColor);
+  const h = instance.hue();
+  const l = instance.lightness();
+  const s = instance.saturationl();
+  const colors: Color[] = [];
 
-  for (let i = 1; i <= shades; i++) {
-    palette.push(base.lighten(0.1 * i));
+
+  if (l === 0) {
+    for (let i = 0; i < shades; i++) {
+      colors.push(Color({
+        h,
+        s,
+        l: l + (i * (100 / shades))
+      }))
+    }
+
+    return colors;
   }
 
-  return palette;
+  for (let i = 0; i < shades; i++) {
+    colors.push(Color({
+      h,
+      s,
+      l: l - (i * (l / shades))
+    }))
+  }
+
+  return colors;
 }
 
 /**
@@ -43,7 +62,49 @@ export const generateMonochromatic = (baseColor: string, shades: number = 5): Co
  */
 export const generateComplementary = (baseColor: string): [Color, Color] => {
   const base = Color(baseColor);
-  return [base, base.rotate(180)];
+  const h = base.hue();
+  const s = base.saturationl();
+  const l = base.lightness();
+
+  if (l === 0) return [base, Color.hsl({ h, s, l: 100 })]
+  if (l === 100) return [base, Color.hsl({ h, s, l: 0 })]
+
+  // very dark
+  if (l < 20) {
+    return [base, Color.hsl({ h, s, l: l + 70 })];
+  }
+
+  // very light
+  if (l > 80) {
+    return [base, Color.hsl({ h, s, l: l - 70 })];
+  }
+
+  return [base, Color.hsl({ h, s, l }).rotate(180)];
+}
+
+/**
+ * Generates an analogous color scheme by selecting colors adjacent to the base color on the color wheel.
+ * 
+ * Typically returns **3-5** colors depending on the `count` parameter.
+ * 
+ * @param baseColor - The base color in any CSS-compatible format.
+ * @param count - The number of analogous colors to generate (default is 3).
+ * @returns An array containing the base color and its analogous colors.
+ */
+export const generateAnalogous = (baseColor: string, count: number = 5): Color[] => {
+  const instance = Color(baseColor);
+  const baseHue = instance.hue();
+  const colors: Color[] = [];
+
+  const hueStep = 30; // Step size for analogous colors (adjust as needed)
+
+  for (let i = 0; i < count; i++) {
+    const hueOffset = (i - Math.floor(count / 2)) * hueStep; // Center the base color
+    const hue = (baseHue + hueOffset + 360) % 360; // Ensure hue stays within 0-360
+    colors.push(Color({ h: hue, s: instance.saturationl(), l: instance.lightness() }));
+  }
+
+  return colors;
 }
 
 /**
@@ -85,45 +146,6 @@ export const generateTetradic = (baseColor: string): [Color, Color, Color, Color
   const base = Color(baseColor);
   return [base, base.rotate(90), base.rotate(180), base.rotate(270)];
 }
-
-/**
- * Generates an analogous color scheme by selecting colors adjacent to the base color on the color wheel.
- * 
- * Typically returns **3-5** colors depending on the `count` parameter.
- * 
- * @param baseColor - The base color in any CSS-compatible format.
- * @param count - The number of analogous colors to generate (default is 3).
- * @returns An array containing the base color and its analogous colors.
- */
-export const generateAnalogous = (baseColor: string, count: number = 3): Color[] => {
-  if (count < 3 || count > 5) {
-    throw new Error("Count must be between 3 and 5.");
-  }
-
-  const base = Color(baseColor);
-  const angle = 30; // Degrees between analogous colors
-  const palette: Color[] = [base];
-
-  for (let i = 1; i < count; i++) {
-    palette.push(base.rotate(angle * i));
-  }
-
-  return palette;
-}
-
-/**
- * Generates a square color scheme, with four colors evenly spaced around the color wheel (90° apart).
- * 
- * Always returns exactly **4** colors.
- * 
- * @param baseColor - The base color in any CSS-compatible format.
- * @returns An array containing the base color and its three square counterparts.
- */
-export const generateSquare = (baseColor: string): [Color, Color, Color, Color] => {
-  const base = Color(baseColor);
-  return [base, base.rotate(90), base.rotate(180), base.rotate(270)];
-}
-
 
 export const generateRandomBalancedPalette = (count: number): Color[] => {
   if (count <= 0) return []; // Guard clause for invalid count
@@ -169,7 +191,6 @@ export const generateShades = (baseColor: string, steps: number = 30): Color[] =
 
   return colors;
 };
-
 
 export const exampleColorPalettes = [
   ["#606C38", "#283618", "#FEFAE0", "#DDA15E", "#BC6C25"],

@@ -39,7 +39,7 @@
         dataType: "json",
         validators: zod(formSchema),
         onUpdate({ form }) {
-          const format = `[${form.data.items.map((e) => e.hex()).join(",")}]`;
+          const format = `[${form.data.items.map((e) => `"${e.hex()}"`).join(",")}]`;
           navigator.clipboard.writeText(format);
           successToast(`Copied to clipboard`);
           isExportModalOpen = false;
@@ -129,7 +129,7 @@
         </div>
       </Form.Fieldset>
 
-      <Form.Button>Copy CSS</Form.Button>
+      <Form.Button>Copy</Form.Button>
     </form>
   </Dialog.Content>
 </Dialog.Root>

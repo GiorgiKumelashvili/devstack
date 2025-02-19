@@ -23,3 +23,5 @@ export type UtilSubItem = {
 };
 
 export type ClickEvent<T = HTMLDivElement> = MouseEvent & { currentTarget: EventTarget & T }
+export type ClickButtonEvent = ClickEvent<HTMLButtonElement> | ClickEvent<HTMLAnchorElement>
+export type ClickAllEvent = ClickButtonEvent | ClickEvent<HTMLDivElement>;

@@ -6,15 +6,16 @@
   import { CircleAlert } from "lucide-svelte";
 
   const tagImports: ComponentMap = {
-    "all-conversions": () => import("./colors/all-conversions.svelte"),
-    "palette-generator": () => import("./colors/palette-generator.svelte"),
+    "color-information": () => import("./colors/color-information.svelte"),
+    "color-palette-generator": () =>
+      import("./colors/color-palette-generator.svelte"),
     "icons-all": () => import("./icons/icons-all.svelte"),
 
     ...(isDevMode && {
       "page-overflow-check": () =>
         import("./onlydev/page-overflow-check.svelte"),
-      "palette-generator-dev": () =>
-        import("./onlydev/palette-generator-dev.svelte"),
+      "color-palette-generator-dev": () =>
+        import("./onlydev/color-palette-generator-dev.svelte"),
     }),
   };
 

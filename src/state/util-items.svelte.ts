@@ -18,9 +18,9 @@ export const utilItems: UtilItem[] = $state([
           tag: 'page-overflow-check'
         },
         {
-          title: "palette Gen Advanced",
-          url: "palette-generator-dev",
-          tag: 'palette-generator-dev'
+          title: "Color Palette Gen Advanced",
+          url: "color-palette-generator-dev",
+          tag: 'color-palette-generator-dev'
         }
       ]
     },
@@ -33,14 +33,14 @@ export const utilItems: UtilItem[] = $state([
     isActive: true,
     items: [
       {
-        title: "All Conversions",
-        url: "all-conversions",
-        tag: "all-conversions",
+        title: "Color Information",
+        url: "color-information",
+        tag: "color-information",
       },
       {
-        title: "palette generator",
-        url: "palette-generator",
-        tag: "palette-generator",
+        title: "Color Palette Generator",
+        url: "color-palette-generator",
+        tag: "color-palette-generator",
       },
     ],
   },

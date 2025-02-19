@@ -11,8 +11,8 @@
 
 <div
   class="wrapper"
-  bind:this={wrapper}
   class:is-open={isOpen}
+  bind:this={wrapper}
   role={isDialog ? "dialog" : undefined}
   aria-label="color picker"
 >
@@ -20,8 +20,6 @@
 </div>
 
 <style>
-  /* TODO fix for light mode */
-
   .wrapper :global {
     input,
     button {
@@ -34,7 +32,9 @@
   }
 
   .wrapper {
-    @apply bg-card text-card-foreground h-fit flex-1 w-full rounded-[9px];
+    @apply bg-card text-card-foreground flex-1 w-full rounded-[9px];
+
+    height: 330px;
 
     --picker-width: 100%;
     --text-input-margin: 5px;
