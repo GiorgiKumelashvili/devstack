@@ -73,3 +73,79 @@ export const successToast = (message: string) => {
     cancel: { label: "Close" },
   });
 }
+
+
+export const regex = {
+  /**
+ * Matches words containing only letters from any language.
+ *
+ * ```md
+ * - \p{L}+ → Matches letters from any language.
+ * - g → Finds all matches (global).
+ * - u → Enables Unicode support.
+ * ```
+ *
+ * **Example Usage:**
+ * ```js
+ * const text = "Hello, 世界! Привет 123 Café.";
+ * const words = text.match(regex.allLetter) || [];
+ * console.log(words); // ["Hello", "世界", "Привет", "Café"]
+ * ```
+ */
+  globalAllLetter: new RegExp(/\p{L}+/gu),
+
+  /**
+ * Matches all numeric digits (0-9) in the text.
+ *
+ * ```md
+ * - \d+ → Matches one or more numeric digits.
+ * - g → Finds all matches (global).
+ * ```
+ *
+ * **Example Usage:**
+ * ```js
+ * const text = "Price: 123 dollars, 456 cents.";
+ * const numbers = text.match(regex.numeric) || [];
+ * console.log(numbers.length); // 2 (["123", "456"])
+ * ```
+ */
+  numeric: new RegExp(/\d+/g),
+
+  /**
+   * Matches all symbols (non-alphanumeric characters, excluding spaces).
+   *
+   * ```md
+   * - [^\p{L}\d\s]+ → Matches anything that is NOT a letter, digit, or space.
+   * - g → Finds all matches (global).
+   * - u → Enables Unicode support.
+   * ```
+   *
+   * **Example Usage:**
+   * ```js
+   * const text = "Hello! @World# 2024.";
+   * const symbols = text.match(regex.symbols) || [];
+   * console.log(symbols.length); // 3 (["!", "@", "#"])
+   * ```
+   */
+  symbols: new RegExp(/[^\p{L}\d\s]+/gu),
+
+  /**
+  * Matches non-blank lines in a string (ignores lines that are only whitespace).
+  *
+  * ```md
+  * - ^ → Anchors the match to the start of each line.
+  * - (?!\s*$) → Negative lookahead that excludes lines that are only whitespace.
+  * - .+ → Matches one or more characters that are not blank.
+  * - g → Global flag to find all matches.
+  * - m → Multiline flag to treat ^ and $ as line-start and line-end anchors.
+  * ```
+  *
+  * **Example Usage:**
+  * ```js
+  * const value = "Hello\n\nWorld\n\nThis is a test";
+  * const lineCount = (value.match(regex.nonBlankLines) || []).length;
+  * console.log(lineCount); // Output: 4
+  * ```
+  */
+  nonBlankLines: new RegExp(/^(?!\s*$).+/gm),
+}

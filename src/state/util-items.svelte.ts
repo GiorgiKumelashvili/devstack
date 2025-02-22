@@ -1,6 +1,6 @@
 import PaintBucket from "lucide-svelte/icons/paint-bucket";
 import type { UtilItem } from "../types";
-import { Boxes, VenetianMask } from "lucide-svelte";
+import { Boxes, Text, Type, VenetianMask } from "lucide-svelte";
 import { isDevMode } from "../env";
 
 export const utilItems: UtilItem[] = $state([
@@ -25,6 +25,20 @@ export const utilItems: UtilItem[] = $state([
       ]
     },
   ],
+  {
+    title: "Text",
+    url: "#",
+    tag: "text",
+    icon: Type,
+    isActive: true,
+    items: [
+      {
+        title: "Text Information",
+        url: "text-information",
+        tag: "text-information",
+      },
+    ],
+  },
   {
     title: "Colors",
     url: "#",

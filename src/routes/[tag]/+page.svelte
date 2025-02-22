@@ -10,6 +10,7 @@
     "color-palette-generator": () =>
       import("./colors/color-palette-generator.svelte"),
     "icons-all": () => import("./icons/icons-all.svelte"),
+    "text-information": () => import("./texts/text-information.svelte"),
 
     ...(isDevMode && {
       "page-overflow-check": () =>

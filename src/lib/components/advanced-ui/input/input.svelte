@@ -8,12 +8,12 @@
   import type { ClickEvent } from "../../../../types";
 
   type Props = HTMLInputAttributes & {
-    value: string;
+    value: string | number | boolean;
     setErrorMessage?: string;
   };
 
   let {
-    value = $bindable(),
+    value = $bindable<string>(),
     setErrorMessage = $bindable(),
     ...props
   }: Props = $props();
