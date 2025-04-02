@@ -10,29 +10,11 @@
   import { AdvancedInput } from "$lib/components/advanced-ui/input";
   import { Button } from "$lib/components/ui/button";
   import { Label } from "$lib/components/ui/label";
-  import { cn, regex, successToast } from "$lib/utils";
+  import { cn, regex } from "$lib/utils";
 
   import TextInformationModal from "./components/text-information-modal.svelte";
 
-  let isCopyIconActive = $state(false);
   let value = $state("");
-
-  const clickCopyButton = () => {
-    if (isCopyIconActive) {
-      return;
-    }
-
-    isCopyIconActive = !isCopyIconActive;
-
-    if (value.trim() !== "") {
-      navigator.clipboard.writeText(value);
-      successToast("Copied to clipboard");
-    }
-
-    setTimeout(() => {
-      isCopyIconActive = false;
-    }, 1500);
-  };
 
   const getCharCountsForEachLetter = (str: string): Record<string, number> => {
     const charCount: Record<string, number> = Object.create(null);
@@ -167,8 +149,7 @@
         <CopyIconButton
           variant="outline"
           defaultDimenstions
-          {isCopyIconActive}
-          onclick={clickCopyButton}
+          opt2Value={value}
         />
 
         <Button variant="outline" size="icon" onclick={() => (value = "")}>

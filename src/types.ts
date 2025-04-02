@@ -3,6 +3,18 @@ import type { Icon } from "lucide-svelte";
 // only place any allowed
 export type GenericCallback<T> = new (...args: any[]) => T;
 
+
+
+export type IpcResponse<T = string> = {
+  data?: T;
+  error: IpcError
+}
+
+export type IpcError = {
+  message: string;
+}
+
+
 export type ComponentMap = {
   [key: string]: () => Promise<{ default: any }>;
 };

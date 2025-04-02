@@ -34,7 +34,7 @@
               {#if mainItem.items}
                 <Sidebar.MenuSub>
                   {#each mainItem.items as subItem (subItem.title)}
-                    <Sidebar.MenuSubItem>
+                    <Sidebar.MenuSubItem class="active:scale-95">
                       <Sidebar.MenuSubButton>
                         {#snippet child({ props })}
                           <a href={subItem.url} {...props}>

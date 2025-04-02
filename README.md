@@ -5,6 +5,7 @@
 
 Instant development environment, with a focus on simplicity and ease of use.
 
+
 ### Tech Stack
 - Tauri
 - Rust
@@ -13,4 +14,10 @@ Instant development environment, with a focus on simplicity and ease of use.
 
 
 ### Screenshots
-![alt text](readme/FirstSnapshot.png)
+
+![alt text](readme/color-info-tool.png)
+
+![alt text](readme/text-info-tool.png)
+
+<!-- Very first iteration -->
+<!-- ![alt text](readme/FirstSnapshot.png) -->

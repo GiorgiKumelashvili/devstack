@@ -1,12 +1,30 @@
+import { isTauri } from "@tauri-apps/api/core";
+import { type Event } from "@tauri-apps/api/event";
 import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-import { cubicOut } from "svelte/easing";
 import { toast } from "svelte-sonner";
+import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
+import { twMerge } from "tailwind-merge";
+import type { IpcResponse } from "../types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const parseIpcPayload = <T = string>(
+  event: Event<string>,
+): IpcResponse<T> => {
+  return JSON.parse(event.payload) as IpcResponse<T>;
+};
+
+export const isDesktop = isTauri();
+export const getIfDesktop = <T>(value: T): T[] => {
+  if (isDesktop) {
+    return [value];
+  }
+
+  return [];
+};
 
 type FlyAndScaleParams = {
   y?: number;
@@ -17,7 +35,7 @@ type FlyAndScaleParams = {
 
 export const flyAndScale = (
   node: Element,
-  params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 }
+  params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 },
 ): TransitionConfig => {
   const style = getComputedStyle(node);
   const transform = style.transform === "none" ? "" : style.transform;
@@ -25,19 +43,17 @@ export const flyAndScale = (
   const scaleConversion = (
     valueA: number,
     scaleA: [number, number],
-    scaleB: [number, number]
+    scaleB: [number, number],
   ) => {
     const [minA, maxA] = scaleA;
     const [minB, maxB] = scaleB;
 
     const percentage = (valueA - minA) / (maxA - minA);
-    const valueB = percentage * (maxB - minB) + minB;
-
-    return valueB;
+    return percentage * (maxB - minB) + minB;
   };
 
   const styleToString = (
-    style: Record<string, number | string | undefined>
+    style: Record<string, number | string | undefined>,
   ): string => {
     return Object.keys(style).reduce((str, key) => {
       if (style[key] === undefined) return str;
@@ -55,10 +71,10 @@ export const flyAndScale = (
 
       return styleToString({
         transform: `${transform} translate3d(${x}px, ${y}px, 0) scale(${scale})`,
-        opacity: t
+        opacity: t,
       });
     },
-    easing: cubicOut
+    easing: cubicOut,
   };
 };
 
@@ -72,43 +88,42 @@ export const successToast = (message: string) => {
     dismissable: true,
     cancel: { label: "Close" },
   });
-}
-
+};
 
 export const regex = {
   /**
- * Matches words containing only letters from any language.
- *
- * ```md
- * - \p{L}+ → Matches letters from any language.
- * - g → Finds all matches (global).
- * - u → Enables Unicode support.
- * ```
- *
- * **Example Usage:**
- * ```js
- * const text = "Hello, 世界! Привет 123 Café.";
- * const words = text.match(regex.allLetter) || [];
- * console.log(words); // ["Hello", "世界", "Привет", "Café"]
- * ```
- */
+   * Matches words containing only letters from any language.
+   *
+   * ```md
+   * - \p{L}+ → Matches letters from any language.
+   * - g → Finds all matches (global).
+   * - u → Enables Unicode support.
+   * ```
+   *
+   * **Example Usage:**
+   * ```js
+   * const text = "Hello, 世界! Привет 123 Café.";
+   * const words = text.match(regex.allLetter) || [];
+   * console.log(words); // ["Hello", "世界", "Привет", "Café"]
+   * ```
+   */
   globalAllLetter: new RegExp(/\p{L}+/gu),
 
   /**
- * Matches all numeric digits (0-9) in the text.
- *
- * ```md
- * - \d+ → Matches one or more numeric digits.
- * - g → Finds all matches (global).
- * ```
- *
- * **Example Usage:**
- * ```js
- * const text = "Price: 123 dollars, 456 cents.";
- * const numbers = text.match(regex.numeric) || [];
- * console.log(numbers.length); // 2 (["123", "456"])
- * ```
- */
+   * Matches all numeric digits (0-9) in the text.
+   *
+   * ```md
+   * - \d+ → Matches one or more numeric digits.
+   * - g → Finds all matches (global).
+   * ```
+   *
+   * **Example Usage:**
+   * ```js
+   * const text = "Price: 123 dollars, 456 cents.";
+   * const numbers = text.match(regex.numeric) || [];
+   * console.log(numbers.length); // 2 (["123", "456"])
+   * ```
+   */
   numeric: new RegExp(/\d+/g),
 
   /**
@@ -130,22 +145,22 @@ export const regex = {
   symbols: new RegExp(/[^\p{L}\d\s]+/gu),
 
   /**
-  * Matches non-blank lines in a string (ignores lines that are only whitespace).
-  *
-  * ```md
-  * - ^ → Anchors the match to the start of each line.
-  * - (?!\s*$) → Negative lookahead that excludes lines that are only whitespace.
-  * - .+ → Matches one or more characters that are not blank.
-  * - g → Global flag to find all matches.
-  * - m → Multiline flag to treat ^ and $ as line-start and line-end anchors.
-  * ```
-  *
-  * **Example Usage:**
-  * ```js
-  * const value = "Hello\n\nWorld\n\nThis is a test";
-  * const lineCount = (value.match(regex.nonBlankLines) || []).length;
-  * console.log(lineCount); // Output: 4
-  * ```
-  */
+   * Matches non-blank lines in a string (ignores lines that are only whitespace).
+   *
+   * ```md
+   * - ^ → Anchors the match to the start of each line.
+   * - (?!\s*$) → Negative lookahead that excludes lines that are only whitespace.
+   * - .+ → Matches one or more characters that are not blank.
+   * - g → Global flag to find all matches.
+   * - m → Multiline flag to treat ^ and $ as line-start and line-end anchors.
+   * ```
+   *
+   * **Example Usage:**
+   * ```js
+   * const value = "Hello\n\nWorld\n\nThis is a test";
+   * const lineCount = (value.match(regex.nonBlankLines) || []).length;
+   * console.log(lineCount); // Output: 4
+   * ```
+   */
   nonBlankLines: new RegExp(/^(?!\s*$).+/gm),
-}
+};

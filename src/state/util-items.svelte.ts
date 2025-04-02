@@ -1,7 +1,8 @@
 import PaintBucket from "lucide-svelte/icons/paint-bucket";
-import type { UtilItem } from "../types";
-import { Boxes, Text, Type, VenetianMask } from "lucide-svelte";
+import type { UtilItem, UtilSubItem } from "../types";
+import { Boxes, Type, VenetianMask } from "lucide-svelte";
 import { isDevMode } from "../env";
+import { getIfDesktop } from "$lib/utils";
 
 export const utilItems: UtilItem[] = $state([
   ...!isDevMode ? [] : [
@@ -37,6 +38,16 @@ export const utilItems: UtilItem[] = $state([
         url: "text-information",
         tag: "text-information",
       },
+      {
+        title: "Text Diff",
+        url: "text-diff",
+        tag: "text-diff",
+      },
+      ...getIfDesktop<UtilSubItem>({
+        title: "Text ASCII",
+        url: "text-ascii",
+        tag: "text-ascii",
+      })
     ],
   },
   {

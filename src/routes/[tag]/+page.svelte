@@ -4,6 +4,7 @@
   import type { ComponentMap, GenericCallback } from "../../types";
   import { isDevMode } from "../../env";
   import { CircleAlert } from "lucide-svelte";
+  import { isDesktop } from "$lib/utils";
 
   const tagImports: ComponentMap = {
     "color-information": () => import("./colors/color-information.svelte"),
@@ -11,6 +12,11 @@
       import("./colors/color-palette-generator.svelte"),
     "icons-all": () => import("./icons/icons-all.svelte"),
     "text-information": () => import("./texts/text-information.svelte"),
+    "text-diff": () => import("./texts/text-diff.svelte"),
+
+    ...(isDesktop && {
+      "text-ascii": () => import("./texts/text-ascii.svelte"),
+    }),
 
     ...(isDevMode && {
       "page-overflow-check": () =>

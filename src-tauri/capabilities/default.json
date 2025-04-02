@@ -7,10 +7,15 @@
   ],
   "permissions": [
     "core:default",
+    "core:path:default",
+    "core:path:allow-resolve-directory",
     "opener:default",
     "dialog:allow-ask",
     "dialog:allow-confirm",
     "dialog:allow-message",
-    "dialog:allow-open"
+    "dialog:allow-open",
+    "opener:allow-open-url",
+    "fs:default",
+    "fs:allow-resource-read-recursive"
   ]
 }

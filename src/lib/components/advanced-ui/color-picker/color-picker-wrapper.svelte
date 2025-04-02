@@ -21,6 +21,8 @@
 
 <style>
   .wrapper :global {
+    @apply w-full;
+
     input,
     button {
       @apply bg-transparent ring-1 ring-input !outline-none placeholder:text-muted-foreground focus-visible:ring-ring;
@@ -35,6 +37,7 @@
     @apply bg-card text-card-foreground flex-1 w-full rounded-[9px];
 
     height: 330px;
+    width: 100%; /* fallback for tauri other props not working */
 
     --picker-width: 100%;
     --text-input-margin: 5px;

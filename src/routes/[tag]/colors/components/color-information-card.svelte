@@ -4,7 +4,7 @@
   import * as Card from "$lib/components/ui/card";
   import { cn, successToast } from "$lib/utils";
 
-  import type { ClickAllEvent, ClickButtonEvent } from "../../../../types";
+  import type { ClickAllEvent } from "../../../../types";
   import CopyIconButton from "$lib/components/advanced-ui/button/copy-icon-button.svelte";
 
   type Props = {
@@ -20,7 +20,6 @@
   };
 
   let { hexValues, title, cardClass }: Props = $props();
-  let copyClick = $state(false);
 
   const copyColor = ({ value, e, customMsg }: CopyColorParams) => {
     e?.currentTarget?.blur();
@@ -28,23 +27,9 @@
     successToast(customMsg ?? `Copied to clipboard ${value}`);
   };
 
-  const clickCopyButton = (e: ClickButtonEvent) => {
-    if (copyClick) {
-      return;
-    }
-
-    copyClick = !copyClick;
-
-    copyColor({
-      e,
-      customMsg: "Copied to clipboard",
-      value: `[${hexValues.map((e) => `"${e.hex()}"`).join(",")}]`,
-    });
-
-    setTimeout(() => {
-      copyClick = false;
-    }, 1500);
-  };
+  let hexValuesToString = $derived.by(() => {
+    return `[${hexValues.map((e) => `"${e.hex()}"`).join(", ")}]`;
+  });
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -53,7 +38,7 @@
   <Card.Header>
     <Card.Title class="text-2xl flex items-center gap-1">
       <p>{title}</p>
-      <CopyIconButton onclick={clickCopyButton} isCopyIconActive={copyClick} />
+      <CopyIconButton opt2Value={hexValuesToString} />
     </Card.Title>
   </Card.Header>
 

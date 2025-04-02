@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "$libs": [
+        "src/libs"
+      ],
+      "$libs/*": [
+        "src/libs/*"
+      ],
+      "$state": [
+        "src/state"
+      ],
+      "$state/*": [
+        "src/state/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.svelte"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    "dist"
+  ]
+}
