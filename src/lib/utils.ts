@@ -1,10 +1,11 @@
 import { isTauri } from "@tauri-apps/api/core";
 import { type Event } from "@tauri-apps/api/event";
+import { twMerge } from "tailwind-merge";
+import { browser } from "$app/environment";
 import { type ClassValue, clsx } from "clsx";
 import { toast } from "svelte-sonner";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
-import { twMerge } from "tailwind-merge";
 import type { IpcResponse } from "../types";
 
 export function cn(...inputs: ClassValue[]) {
@@ -17,7 +18,8 @@ export const parseIpcPayload = <T = string>(
   return JSON.parse(event.payload) as IpcResponse<T>;
 };
 
-export const isDesktop = isTauri();
+export const isDesktop = browser ? isTauri() : true;
+
 export const getIfDesktop = <T>(value: T): T[] => {
   if (isDesktop) {
     return [value];
@@ -164,3 +166,15 @@ export const regex = {
    */
   nonBlankLines: new RegExp(/^(?!\s*$).+/gm),
 };
+
+
+export  const downloadSvg= (name: string, body: string)=> {
+  const svgBlob = new Blob([body], {type:"image/svg+xml;charset=utf-8"});
+  const svgUrl = URL.createObjectURL(svgBlob);
+  const downloadLink = document.createElement("a");
+  downloadLink.href = svgUrl;
+  downloadLink.download = `${name}.svg`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+}

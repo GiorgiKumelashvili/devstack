@@ -1,12 +1,37 @@
-import path from 'path'
-import { defineConfig } from "vite";
+// noinspection JSUnusedGlobalSymbols
+
 import { sveltekit } from "@sveltejs/kit/vite";
+import path from "path";
+import { defineConfig } from "vite";
 
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [sveltekit()],
+  plugins: [await sveltekit()],
+
+  build: {
+    rollupOptions: {
+      onwarn(warning, warn) {
+        if (
+          warning.message.includes(
+            'Module "node:dns/promises" has been externalized',
+          )
+        ) {
+          return;
+        }
+
+        warn(warning);
+      },
+      output: {
+        manualChunks(id) {
+          if (id.includes('lucide-svelte')) {
+            return 'lucide-svelte';
+          }
+        }
+      }
+    },
+  },
 
   resolve: {
     alias: {
@@ -26,10 +51,10 @@ export default defineConfig(async () => ({
     host: host || false,
     hmr: host
       ? {
-        protocol: "ws",
-        host,
-        port: 1421,
-      }
+          protocol: "ws",
+          host,
+          port: 1421,
+        }
       : undefined,
     watch: {
       // 3. tell vite to ignore watching `src-tauri`
