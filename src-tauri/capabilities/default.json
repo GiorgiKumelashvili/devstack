@@ -16,6 +16,12 @@
     "dialog:allow-open",
     "opener:allow-open-url",
     "fs:default",
-    "fs:allow-resource-read-recursive"
+    "fs:allow-resource-read-recursive",
+
+    "dialog:allow-save",
+    "fs:allow-read-text-file",
+    "fs:allow-read-file",
+    "fs:allow-write-file",
+    "fs:allow-write-text-file"
   ]
 }

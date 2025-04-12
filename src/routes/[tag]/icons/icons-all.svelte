@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Icon, icons } from "lucide-svelte";
   import { toast } from "svelte-sonner";
-  import { downloadSvg } from "$lib/utils";
+  import { download } from "$lib/utils";
 
   type SvelteLucideIcons = {
     id: string,
@@ -19,7 +19,7 @@
       return;
     }
 
-    downloadSvg(name, icon.outerHTML);
+    download(name, icon.outerHTML, 'svg');
   };
 </script>
 
