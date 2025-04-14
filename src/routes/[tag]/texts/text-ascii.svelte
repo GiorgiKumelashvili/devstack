@@ -5,7 +5,7 @@
   import { listen } from "@tauri-apps/api/event";
 
   import * as Card from "$lib/components/ui/card";
-  import * as Select from "$lib/components/ui/select/index.js";
+  import * as Select from "$lib/components/ui/select";
   import CopyIconButton from "$lib/components/advanced-ui/button/copy-icon-button.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
   import { Button } from "$lib/components/ui/button";
@@ -22,7 +22,7 @@
   };
 
   const availableFiglets: FigletDropdownItem[] = [
-    { path: "", label: "Default" }
+    { path: "", label: "Default" },
   ];
 
   let input = $state("");
@@ -33,7 +33,7 @@
     const filePath = await open({
       multiple: true,
       title: "Select a filet file",
-      filters: [{ name: "All Files", extensions: ["flf"] }]
+      filters: [{ name: "All Files", extensions: ["flf"] }],
     });
 
     if (!filePath?.length) {
@@ -42,15 +42,15 @@
 
     const firstFiglet: FigletDropdownItem = {
       path: filePath[0],
-      label: filePath[0].split("/").pop() ?? filePath[0]
+      label: filePath[0].split("/").pop() ?? filePath[0],
     };
     const payload = {
       font: firstFiglet.path,
-      text: input
+      text: input,
     };
 
     const figletExists = availableFiglets.find(
-      (el) => el.path === firstFiglet.path
+      (el) => el.path === firstFiglet.path,
     );
     const inputExists = input.trim() !== "";
 
@@ -68,7 +68,7 @@
     for (const path of filePath) {
       const figletItem: FigletDropdownItem = {
         path,
-        label: path.split("/").pop() ?? path
+        label: path.split("/").pop() ?? path,
       };
 
       const figletExists = availableFiglets.find((el) => el.path === path);
@@ -98,7 +98,7 @@
       font:
         currentFigletFont.label === "Default"
           ? undefined
-          : currentFigletFont.path
+          : currentFigletFont.path,
     });
   };
 
@@ -114,7 +114,7 @@
     if (input.trim() !== "") {
       invoke("figlet_transform", {
         text: input,
-        font: currentFigletFont.label === "Default" ? undefined : path
+        font: currentFigletFont.label === "Default" ? undefined : path,
       });
     }
   };
@@ -125,11 +125,17 @@
 
   onMount(async () => {
     const path = "static/fonts/figlets";
-    const figletFonts = await readDir(path, { baseDir: BaseDirectory.Resource });
+    const figletFonts = await readDir(path, {
+      baseDir: BaseDirectory.Resource,
+    });
 
-    const paths: FigletDropdownItem[] = (await Promise.all(figletFonts.map(e => resolveResource(path + "/" + e.name)))).map(e => ({
+    const paths: FigletDropdownItem[] = (
+      await Promise.all(
+        figletFonts.map((e) => resolveResource(path + "/" + e.name)),
+      )
+    ).map((e) => ({
       path: e,
-      label: e.split("/").pop() ?? e
+      label: e.split("/").pop() ?? e,
     }));
 
     availableFiglets.push(...paths);
@@ -148,7 +154,7 @@
         For more figlet go to this links
         <BrowserLink url="https://github.com/xero/figlet-fonts">
           figlet-fonts
-        </BrowserLink>{','}
+        </BrowserLink>{","}
         <BrowserLink url="https://github.com/inteist/figlet-fonts-gallery">
           figlet-fonts-gallery
         </BrowserLink>
@@ -209,10 +215,10 @@
 </div>
 
 <style>
-    :global .custom-editor .cm-editor {
-        height: 100%;
-        border-radius: 6px !important;
-        padding: 3px !important;
-        max-height: none;
-    }
+  :global .custom-editor .cm-editor {
+    height: 100%;
+    border-radius: 6px !important;
+    padding: 3px !important;
+    max-height: none;
+  }
 </style>

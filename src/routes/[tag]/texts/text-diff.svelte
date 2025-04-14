@@ -1,6 +1,5 @@
 <script lang="ts">
-  import * as themes from "@uiw/codemirror-themes-all";
-  import CodeMirror from "svelte-codemirror-editor";
+  import { monokaiDimmed as monokaiDimmedTheme } from "@uiw/codemirror-themes-all";
   import { minimalSetup } from "codemirror";
   import { placeholder } from "@codemirror/view";
   import { FoldVertical, GitMerge, X } from "lucide-svelte";
@@ -11,6 +10,7 @@
 
   import { unifiedMergeView } from "@codemirror/merge";
   import { Toggle } from "$lib/components/ui/toggle";
+  import { AdvancedCodeMirror } from "$lib/components/advanced-ui/codemirror";
 
   let originalValue = $state("");
   let modifiedValue = $state("");
@@ -43,20 +43,19 @@
       </Card.Header>
 
       <Card.Content class="flex-1 overflow-auto">
-        <CodeMirror
+        <AdvancedCodeMirror
           bind:value={originalValue}
-          nodebounce={true}
           lineWrapping={true}
-          theme={themes.monokaiDimmed}
+          theme={monokaiDimmedTheme}
           basic={false}
           extensions={[
             minimalSetup,
             placeholder("Enter original text here..."),
           ]}
           class="h-full border-white custom-editor"
-          on:ready={(e) => {
-            if (!e.detail.hasFocus) {
-              e.detail.focus();
+          onReady={(e) => {
+            if (!e.hasFocus) {
+              e.focus();
             }
           }}
         />
@@ -85,11 +84,10 @@
       </Card.Header>
 
       <Card.Content class="flex-1 overflow-auto">
-        <CodeMirror
+        <AdvancedCodeMirror
           bind:value={modifiedValue}
-          nodebounce={true}
           lineWrapping={true}
-          theme={themes.monokaiDimmed}
+          theme={monokaiDimmedTheme}
           basic={false}
           extensions={[
             minimalSetup,
@@ -131,9 +129,9 @@
     </Card.Header>
 
     <Card.Content class="flex-1 overflow-auto">
-      <CodeMirror
+      <AdvancedCodeMirror
         bind:value={modifiedValue}
-        theme={themes.monokaiDimmed}
+        theme={monokaiDimmedTheme}
         lineWrapping={true}
         basic={false}
         readonly={true}

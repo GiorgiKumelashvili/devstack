@@ -13,6 +13,7 @@
     "icons-all": () => import("./icons/icons-all.svelte"),
     "text-information": () => import("./texts/text-information.svelte"),
     "text-diff": () => import("./texts/text-diff.svelte"),
+    "json-yaml-csv": () => import("./conversions/json-yaml-csv.svelte"),
 
     ...(isDesktop && {
       "text-ascii": () => import("./texts/text-ascii.svelte"),

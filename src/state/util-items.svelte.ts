@@ -1,8 +1,7 @@
-import PaintBucket from "lucide-svelte/icons/paint-bucket";
-import type { UtilItem, UtilSubItem } from "../types";
-import { Boxes, Type, VenetianMask } from "lucide-svelte";
-import { isDevMode } from "../env";
+import { Boxes, PaintBucket, PencilRuler, Type, VenetianMask } from "lucide-svelte";
 import { getIfDesktop } from "$lib/utils";
+import { isDevMode } from "../env";
+import type { UtilItem, UtilSubItem } from "../types";
 
 export const utilItems: UtilItem[] = $state([
   ...!isDevMode ? [] : [
@@ -80,6 +79,21 @@ export const utilItems: UtilItem[] = $state([
         title: "All",
         url: "icons-all",
         tag: "icons-all",
+      },
+    ],
+  },
+  {
+    title: "Conversions",
+    url: "#",
+    tag: "conversions",
+    icon: PencilRuler,
+    // icon: SendToBack,
+    isActive: true,
+    items: [
+      {
+        title: "Json Yaml Csv",
+        url: "json-yaml-csv",
+        tag: "json-yaml-csv",
       },
     ],
   },

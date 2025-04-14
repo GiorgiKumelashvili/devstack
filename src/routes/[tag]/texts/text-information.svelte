@@ -1,6 +1,5 @@
 <script lang="ts">
-  import * as themes from "@uiw/codemirror-themes-all";
-  import CodeMirror from "svelte-codemirror-editor";
+  import { monokaiDimmed as monokaiDimmedTheme } from "@uiw/codemirror-themes-all";
   import { minimalSetup } from "codemirror";
   import { placeholder } from "@codemirror/view";
   import { X } from "lucide-svelte";
@@ -13,6 +12,7 @@
   import { cn, regex } from "$lib/utils";
 
   import TextInformationModal from "./components/text-information-modal.svelte";
+  import { AdvancedCodeMirror } from "$lib/components/advanced-ui/codemirror";
 
   let value = $state("");
 
@@ -28,7 +28,7 @@
   };
 
   const getCountForEachArrItem = (
-    items: (string | number)[]
+    items: (string | number)[],
   ): Record<string, number> => {
     const itemCount: Record<string, number> = Object.create(null);
 
@@ -92,7 +92,7 @@
       bytesCount: new Blob([value]).size,
       longestWord: uniqueWords.reduce(
         (a, b) => (a.length > b.length ? a : b),
-        ""
+        "",
       ),
       readingTime: Math.ceil(wordCount / 200),
       asciiNumber: value.charCodeAt(0),
@@ -116,7 +116,7 @@
     <div
       class={cn(
         "flex items-center gap-1.5 pb-1.5",
-        !additionalInfo && "h-[34px]"
+        !additionalInfo && "h-[34px]",
       )}
     >
       <Label class="block opacity-85 font-bold text-red-400">
@@ -159,17 +159,16 @@
     </Card.Header>
 
     <Card.Content class="flex-1">
-      <CodeMirror
+      <AdvancedCodeMirror
         bind:value
-        nodebounce={true}
         lineWrapping={true}
-        theme={themes.monokaiDimmed}
+        theme={monokaiDimmedTheme}
         basic={false}
         extensions={[minimalSetup, placeholder("Enter text here...")]}
         class="h-full border-white custom-editor"
-        on:ready={(e) => {
-          if (!e.detail.hasFocus) {
-            e.detail.focus();
+        onReady={(e) => {
+          if (!e.hasFocus) {
+            e.focus();
           }
         }}
       />
