@@ -18,7 +18,7 @@
     CSV = "CSV",
   }
 
-  let selectedType = $state<ConvertorType>(ConvertorType.CSV);
+  let selectedType = $state<ConvertorType>(ConvertorType.YAML);
   let jsonValue = $state(``);
   let yamlValue = $state(``);
   let csvValue = $state(``);
