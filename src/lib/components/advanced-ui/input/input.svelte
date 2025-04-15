@@ -3,6 +3,7 @@
 
   import { Input } from "$lib/components/ui/input";
   import CopyIconButton from "$lib/components/advanced-ui/button/copy-icon-button.svelte";
+  import { cn } from "$lib/utils";
 
   type Props = HTMLInputAttributes & {
     value: string | number | boolean;
@@ -12,12 +13,13 @@
   let {
     value = $bindable<string>(),
     setErrorMessage = $bindable(),
+    class: className,
     ...props
   }: Props = $props();
 </script>
 
 <div class="relative">
-  <Input {...props} bind:value class="pr-8" />
+  <Input {...props} bind:value class={cn("pr-8", className)} />
 
   {#if setErrorMessage}
     <p class="text-red-600">{setErrorMessage}</p>

@@ -1,0 +1,48 @@
+<script lang="ts">
+  import { AdvancedInput } from "$lib/components/advanced-ui/input";
+  import { Label } from "$lib/components/ui/label";
+  import { cn } from "$lib/utils";
+  import type { HTMLInputAttributes } from "svelte/elements";
+
+  type Props = HTMLInputAttributes & {
+    title?: string;
+    value: string | number;
+    readonly?: boolean;
+    foreGroundText?: string;
+    erroMsg?: string;
+  };
+
+  let {
+    title,
+    value = $bindable(),
+    foreGroundText,
+    erroMsg,
+    readonly = true,
+    ...props
+  }: Props = $props();
+</script>
+
+<div class="flex-1">
+  {#if title}
+    <div class={cn("flex items-center gap-1.5 pb-1.5")}>
+      <Label class="block opacity-85 font-bold text-red-400">
+        {title}
+      </Label>
+    </div>
+  {/if}
+
+  <AdvancedInput
+    {...props}
+    bind:value
+    {readonly}
+    class={cn({ "border border-red-500": !!erroMsg })}
+  />
+
+  {#if erroMsg}
+    <p class="text-sm text-red-500">{erroMsg}</p>
+  {/if}
+
+  {#if foreGroundText}
+    <p class="text-muted-foreground text-sm">{foreGroundText}</p>
+  {/if}
+</div>
