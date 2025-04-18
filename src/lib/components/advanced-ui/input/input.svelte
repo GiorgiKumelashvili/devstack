@@ -5,8 +5,9 @@
   import CopyIconButton from "$lib/components/advanced-ui/button/copy-icon-button.svelte";
   import { cn } from "$lib/utils";
 
+  type Value = string | number | boolean;
   type Props = HTMLInputAttributes & {
-    value: string | number | boolean;
+    value: Value;
     setErrorMessage?: string;
   };
 

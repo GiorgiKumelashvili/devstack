@@ -108,6 +108,11 @@ export const utilItems: UtilItem[] = $state([
         url: "uuid",
         tag: "uuid",
       },
+      {
+        title: "QR Code",
+        url: "qr",
+        tag: "qr",
+      },
     ],
   },
 ]);

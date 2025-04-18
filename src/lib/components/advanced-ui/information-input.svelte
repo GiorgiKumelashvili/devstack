@@ -2,11 +2,13 @@
   import { AdvancedInput } from "$lib/components/advanced-ui/input";
   import { Label } from "$lib/components/ui/label";
   import { cn } from "$lib/utils";
+  import type { Snippet } from "svelte";
   import type { HTMLInputAttributes } from "svelte/elements";
 
   type Props = HTMLInputAttributes & {
     title?: string;
-    value: string | number;
+    nextToTitle?: Snippet;
+    value: string | number | undefined;
     readonly?: boolean;
     foreGroundText?: string;
     erroMsg?: string;
@@ -14,12 +16,15 @@
 
   let {
     title,
-    value = $bindable(),
+    nextToTitle,
+    value = $bindable(""),
     foreGroundText,
     erroMsg,
     readonly = true,
     ...props
   }: Props = $props();
+
+  // TODO move this inside advanced input
 </script>
 
 <div class="flex-1">
@@ -28,6 +33,8 @@
       <Label class="block opacity-85 font-bold text-red-400">
         {title}
       </Label>
+
+      {@render nextToTitle?.()}
     </div>
   {/if}
 

@@ -15,6 +15,7 @@
     "text-diff": () => import("./texts/text-diff.svelte"),
     "json-yaml-csv": () => import("./conversions/json-yaml-csv.svelte"),
     uuid: () => import("./misc/uuid.svelte"),
+    qr: () => import("./misc/qr/qr.svelte"),
 
     ...(isDesktop && {
       "text-ascii": () => import("./texts/text-ascii.svelte"),
