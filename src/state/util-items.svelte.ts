@@ -104,6 +104,11 @@ export const utilItems: UtilItem[] = $state([
     isActive: true,
     items: [
       {
+        title: "JWT",
+        url: "jwt",
+        tag: "jwt",
+      },
+      {
         title: "UUID",
         url: "uuid",
         tag: "uuid",

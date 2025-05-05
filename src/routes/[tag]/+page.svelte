@@ -16,6 +16,7 @@
     "json-yaml-csv": () => import("./conversions/json-yaml-csv.svelte"),
     uuid: () => import("./misc/uuid.svelte"),
     qr: () => import("./misc/qr/qr.svelte"),
+    jwt: () => import("./misc/jwt.svelte"),
 
     ...(isDesktop && {
       "text-ascii": () => import("./texts/text-ascii.svelte"),

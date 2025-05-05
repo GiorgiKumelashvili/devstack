@@ -33,6 +33,7 @@
     "@uiw/codemirror-themes-all": "^4.23.8",
     "codemirror": "^6.0.1",
     "color": "^4.2.3",
+    "jose": "^6.0.10",
     "js-yaml": "^4.1.0",
     "papaparse": "^5.5.2",
     "qr": "^0.4.0",

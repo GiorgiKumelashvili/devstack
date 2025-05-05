@@ -3,6 +3,8 @@ import type { Icon } from "lucide-svelte";
 // only place any allowed
 export type GenericCallback<T> = new (...args: any[]) => T;
 
+export type EitherVal<T> = { value: T | null, error: string | null };
+
 
 
 export type IpcResponse<T = string> = {
