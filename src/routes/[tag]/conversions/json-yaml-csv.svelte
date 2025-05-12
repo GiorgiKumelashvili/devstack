@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { andromeda as andromedaTheme } from "@uiw/codemirror-themes-all";
   import Papa from "papaparse";
+  import { andromeda as andromedaTheme } from "@uiw/codemirror-themes-all";
   import jsyaml, { YAMLException } from "js-yaml";
   import { toast } from "svelte-sonner";
   import { minimalSetup } from "codemirror";

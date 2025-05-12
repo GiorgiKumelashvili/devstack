@@ -18,11 +18,19 @@
     qr: () => import("./misc/qr/qr.svelte"),
     jwt: () => import("./misc/jwt.svelte"),
 
+    "json-format": () => import("./formating/json-format.svelte"),
+    "yaml-format": () => import("./formating/yaml-format.svelte"),
+    "html-format": () => import("./formating/html-format.svelte"),
+    "css-format": () => import("./formating/css-format.svelte"),
+    "markdown-format": () => import("./formating/markdown-format.svelte"),
+    "sql-format": () => import("./formating/sql-format.svelte"),
+
     ...(isDesktop && {
       "text-ascii": () => import("./texts/text-ascii.svelte"),
     }),
 
     ...(isDevMode && {
+      "json-format-test": () => import("./onlydev/json-format-test.svelte"),
       "page-overflow-check": () =>
         import("./onlydev/page-overflow-check.svelte"),
       "color-palette-generator-dev": () =>

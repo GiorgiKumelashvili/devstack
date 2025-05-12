@@ -1,4 +1,4 @@
-import { Boxes, CircleEllipsis, PaintBucket, PencilRuler, Type, VenetianMask } from "lucide-svelte";
+import { Boxes, CircleEllipsis, PaintBucket, PencilRuler, Type, TypeOutline, VenetianMask } from "lucide-svelte";
 import { getIfDesktop } from "$lib/utils";
 import { isDevMode } from "../env";
 import type { UtilItem, UtilSubItem } from "../types";
@@ -21,6 +21,11 @@ export const utilItems: UtilItem[] = $state([
           title: "Color Palette Gen Advanced",
           url: "color-palette-generator-dev",
           tag: 'color-palette-generator-dev'
+        },
+        {
+          title: "JSON Format Test",
+          url: "json-format-test",
+          tag: 'json-format-test'
         }
       ]
     },
@@ -66,6 +71,45 @@ export const utilItems: UtilItem[] = $state([
         url: "color-palette-generator",
         tag: "color-palette-generator",
       },
+    ],
+  },
+  {
+    title: "Format",
+    url: "#",
+    tag: "color",
+    icon: TypeOutline,
+    isActive: true,
+    items: [
+      {
+        title: "JSON format",
+        url: "json-format",
+        tag: "json-format",
+      },
+      {
+        title: "YAML format",
+        url: "yaml-format",
+        tag: "yaml-format",
+      },
+      {
+        title: "HTML format",
+        url: "html-format",
+        tag: "html-format",
+      },
+      {
+        title: "CSS, SCSS, LESS format",
+        url: "css-format",
+        tag: "css-format",
+      },
+      {
+        title: "Markdown format",
+        url: "markdown-format",
+        tag: "markdown-format",
+      },
+      {
+        title: "SQL format",
+        url: "sql-format",
+        tag: "sql-format",
+      }
     ],
   },
   {
