@@ -101,11 +101,6 @@ export const utilItems: UtilItem[] = $state([
         tag: "css-format",
       },
       {
-        title: "Markdown format",
-        url: "markdown-format",
-        tag: "markdown-format",
-      },
-      {
         title: "SQL format",
         url: "sql-format",
         tag: "sql-format",

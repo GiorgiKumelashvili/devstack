@@ -22,7 +22,6 @@
     "yaml-format": () => import("./formating/yaml-format.svelte"),
     "html-format": () => import("./formating/html-format.svelte"),
     "css-format": () => import("./formating/css-format.svelte"),
-    "markdown-format": () => import("./formating/markdown-format.svelte"),
     "sql-format": () => import("./formating/sql-format.svelte"),
 
     ...(isDesktop && {
