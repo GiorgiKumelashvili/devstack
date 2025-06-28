@@ -1,9 +1,5 @@
-<script lang="ts">
-  import { Copy, CopyCheck } from "lucide-svelte";
-  import { Button, type ButtonProps } from "$lib/components/ui/button";
-  import { cn, successToast } from "$lib/utils";
-
-  type Props = ButtonProps & {
+<script module lang="ts">
+  export type CustomIconButtonProps = {
     defaultDimenstions?: boolean;
 
     // this is do your own
@@ -16,6 +12,14 @@
     opt3Callback?: () => void;
   };
 
+  export type CopyIconButtonProps = ButtonProps & CustomIconButtonProps;
+</script>
+
+<script lang="ts">
+  import { Copy, CopyCheck } from "lucide-svelte";
+  import { Button, type ButtonProps } from "$lib/components/ui/button";
+  import { cn, successToast } from "$lib/utils";
+
   let {
     opt1IsCopyIconActive,
     opt2Value,
@@ -25,10 +29,9 @@
     class: className,
     defaultDimenstions = false,
     ...props
-  }: Props = $props();
+  }: CopyIconButtonProps = $props();
 
   let isCopyIconActuallyActive = $state(opt1IsCopyIconActive ?? false);
-
   const onClickInside = () => {
     if (isCopyIconActuallyActive) {
       return;
@@ -57,9 +60,11 @@
   {...props}
 >
   {#if isCopyIconActuallyActive}
-    <CopyCheck class="h-[0.5rem] w-[0.5rem] rotate-0 scale-55 transition-all" />
+    <CopyCheck />
+    <!-- <CopyCheck class="h-[0.5rem] w-[0.5rem] rotate-0 scale-55 transition-all" /> -->
   {:else}
-    <Copy class="h-[0.5rem] w-[0.5rem] rotate-0 scale-55 transition-all" />
+    <Copy />
+    <!-- <Copy class="!h-[19px] !w-[19px] rotate-0 scale-55 transition-all" /> -->
   {/if}
 
   <span class="sr-only">Copy button</span>

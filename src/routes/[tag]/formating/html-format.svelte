@@ -9,12 +9,11 @@
   import { toast } from "svelte-sonner";
   import { minimalSetup } from "codemirror";
   import { EditorView, placeholder } from "@codemirror/view";
-  import { andromeda as andromedaTheme } from "@uiw/codemirror-themes-all";
+  import { abcdef } from "@uiw/codemirror-themes-all";
   import { html } from "@codemirror/lang-html";
 
-  import * as Card from "$lib/components/ui/card";
-  import CopyIconButton from "$lib/components/advanced-ui/button/copy-icon-button.svelte";
   import { AdvancedCodeMirror } from "$lib/components/advanced-ui/codemirror";
+  import AdvancedCard from "$lib/components/advanced-ui/card/advanced-card.svelte";
 
   let value = $state(``);
   let formatedValue = $state(``);
@@ -58,75 +57,50 @@
 </script>
 
 <div class="flex gap-4 h-full">
-  <Card.Root class="flex-1 flex flex-col">
-    <Card.Header class="flex-row items-center justify-between">
-      <Card.Title>HTML View</Card.Title>
+  <AdvancedCard
+    title="HTML View"
+    opt2Value={value}
+    onClear={() => (value = "")}
+    class="flex-1"
+  >
+    <AdvancedCodeMirror
+      bind:value
+      lineWrapping={true}
+      theme={abcdef}
+      basic={false}
+      extensions={[
+        minimalSetup,
+        html(),
+        placeholder("Enter html text here..."),
+      ]}
+      class="h-full border shadow rounded-xl custom-editor"
+      onReady={(e) => {
+        if (!e.hasFocus) {
+          e.focus();
+        }
+      }}
+      onChange={handleFormat}
+    />
+  </AdvancedCard>
 
-      <div class="flex">
-        <CopyIconButton
-          variant="outline"
-          defaultDimenstions
-          opt2Value={value}
-        />
-      </div>
-    </Card.Header>
-
-    <Card.Content class="flex-1 overflow-auto">
-      <AdvancedCodeMirror
-        bind:value
-        lineWrapping={true}
-        theme={andromedaTheme}
-        basic={false}
-        extensions={[
-          minimalSetup,
-          html(),
-          placeholder("Enter html text here..."),
-        ]}
-        class="h-full border-white custom-editor"
-        onReady={(e) => {
-          if (!e.hasFocus) {
-            e.focus();
-          }
-        }}
-        onChange={handleFormat}
-      />
-    </Card.Content>
-  </Card.Root>
-
-  <div class="flex flex-1 flex-col gap-4">
-    <Card.Root class="flex flex-1 basis-0 flex-col overflow-auto">
-      <Card.Header class="flex-row items-center justify-between">
-        <Card.Title>Formatted View</Card.Title>
-
-        <div class="flex gap-5">
-          <CopyIconButton
-            variant="outline"
-            defaultDimenstions
-            opt2Value={formatedValue}
-          />
-        </div>
-      </Card.Header>
-
-      <Card.Content class="flex-1 overflow-auto relative">
-        <AdvancedCodeMirror
-          value={formatedValue}
-          lineWrapping={true}
-          theme={andromedaTheme}
-          basic={false}
-          extensions={[minimalSetup, html()]}
-          class="h-full border-white custom-editor"
-          readonly={true}
-        />
-      </Card.Content>
-    </Card.Root>
-  </div>
+  <AdvancedCard title="Formatted View" class="flex-1" opt2Value={formatedValue}>
+    <AdvancedCodeMirror
+      value={formatedValue}
+      lineWrapping={true}
+      theme={abcdef}
+      basic={false}
+      extensions={[minimalSetup, html()]}
+      class="h-full border shadow rounded-xl custom-editor"
+      readonly={true}
+    />
+  </AdvancedCard>
 </div>
 
 <style>
   :global .custom-editor .cm-editor {
     height: 100%;
-    border-radius: 6px !important;
-    padding: 3px !important;
+    border-radius: 10px !important;
+    padding: 4px !important;
     max-height: none;
   }
 </style>

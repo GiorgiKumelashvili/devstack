@@ -7,9 +7,10 @@
   import * as Popover from "$lib/components/ui/popover";
   import { Label } from "$lib/components/ui/label";
   import { Button } from "$lib/components/ui/button";
-  import InformationInput from "$lib/components/advanced-ui/information-input.svelte";
+  import InformationInput from "$lib/components/advanced-ui/input/information-input.svelte";
 
   import QrEccPopoverContent from "./qr-ecc-popover-content.svelte";
+  import AdvancedCard from "$lib/components/advanced-ui/card/advanced-card.svelte";
 
   type QrOutputType = Extract<Output, "svg" | "gif" | "ascii">;
   type ErrCorrectionLevelItem = { label: string; value: ErrorCorrection };
@@ -105,159 +106,155 @@
 </script>
 
 <div class="flex gap-4">
-  <Card.Root class="w-[600px] min-w-[600px] flex flex-col mt-3 h-fit">
-    <Card.Header>
-      <Card.Title>Input QR Parameters</Card.Title>
-    </Card.Header>
+  <AdvancedCard
+    class="w-[600px] min-w-[600px] mt-3 h-fit"
+    contentClass="flex-1 flex flex-col gap-4"
+    title="Input QR Parameters"
+  >
+    <div class="flex gap-2">
+      <InformationInput
+        bind:value={input}
+        title="Text"
+        placeholder="Enter text here..."
+        readonly={false}
+      >
+        {#snippet nextToTitle()}
+          <QrEccPopoverContent />
+        {/snippet}
+      </InformationInput>
 
-    <Card.Content class="flex-1 flex flex-col gap-4">
-      <div class="flex gap-2">
-        <InformationInput
-          bind:value={input}
-          title="Text"
-          placeholder="Enter text here..."
-          readonly={false}
+      <div>
+        <div class="flex items-center gap-1.5 pb-1.5">
+          <Label class="block opacity-85 font-bold text-red-400">ECC</Label>
+
+          <Popover.Root>
+            <Popover.Trigger>
+              <CircleHelp class="text-muted-foreground" size={16} />
+            </Popover.Trigger>
+            <Popover.Content
+              preventScroll={true}
+              side="right"
+              class="w-[400px]"
+            >
+              Error Correction Code - a feature specific to QR Codes that
+              ensures they are scannable, even if there has been some form of
+              physical damage to the code.
+
+              <ul class="list-disc list-inside pt-3">
+                <li>Level L - 7% of data can be restored.</li>
+                <li>Level M - 15% of data can be restored.</li>
+                <li>Level Q - 25% of data can be restored.</li>
+                <li>Level H - 30% of data can be restored.</li>
+              </ul>
+            </Popover.Content>
+          </Popover.Root>
+        </div>
+
+        <Select.Root
+          type="single"
+          onValueChange={setErrCorrectionLvl}
+          value={qrOpts.ecc}
         >
-          {#snippet nextToTitle()}
-            <QrEccPopoverContent />
-          {/snippet}
-        </InformationInput>
+          <Select.Trigger class="w-[200px]">
+            {errCorrectionLvls.find((e) => e.value === qrOpts.ecc)?.label}
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Group>
+              {#each errCorrectionLvls as e}
+                <Select.Item value={e.value.toString()} label={e.label} />
+              {/each}
+            </Select.Group>
+          </Select.Content>
+        </Select.Root>
+      </div>
+    </div>
 
-        <div>
-          <div class="flex items-center gap-1.5 pb-1.5">
-            <Label class="block opacity-85 font-bold text-red-400">ECC</Label>
+    <div class="flex gap-2">
+      <div class="flex-1">
+        <Label class="block pb-1.5 opacity-85 font-bold text-red-400">
+          Output Type
+        </Label>
 
-            <Popover.Root>
-              <Popover.Trigger>
-                <CircleHelp class="text-muted-foreground" size={16} />
-              </Popover.Trigger>
-              <Popover.Content
-                preventScroll={true}
-                side="right"
-                class="w-[400px]"
-              >
-                Error Correction Code - a feature specific to QR Codes that
-                ensures they are scannable, even if there has been some form of
-                physical damage to the code.
-
-                <ul class="list-disc list-inside pt-3">
-                  <li>Level L - 7% of data can be restored.</li>
-                  <li>Level M - 15% of data can be restored.</li>
-                  <li>Level Q - 25% of data can be restored.</li>
-                  <li>Level H - 30% of data can be restored.</li>
-                </ul>
-              </Popover.Content>
-            </Popover.Root>
-          </div>
-
-          <Select.Root
-            type="single"
-            onValueChange={setErrCorrectionLvl}
-            value={qrOpts.ecc}
-          >
-            <Select.Trigger class="w-[200px]">
-              {errCorrectionLvls.find((e) => e.value === qrOpts.ecc)?.label}
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Group>
-                {#each errCorrectionLvls as e}
-                  <Select.Item value={e.value.toString()} label={e.label} />
-                {/each}
-              </Select.Group>
-            </Select.Content>
-          </Select.Root>
-        </div>
+        <Select.Root
+          type="single"
+          onValueChange={(e) => setOuputType(e as QrOutputType)}
+          value={outputType}
+        >
+          <Select.Trigger>
+            {outputTypes.find((e) => e === outputType)}
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Group>
+              {#each outputTypes as e}
+                <Select.Item value={e} label={e} />
+              {/each}
+            </Select.Group>
+          </Select.Content>
+        </Select.Root>
       </div>
 
-      <div class="flex gap-2">
-        <div class="flex-1">
-          <Label class="block pb-1.5 opacity-85 font-bold text-red-400">
-            Output Type
-          </Label>
+      <InformationInput
+        bind:value={qrOpts.version}
+        title="Version"
+        type="number"
+        class="flex-1"
+        placeholder="Enter version here..."
+        foreGroundText="Available 1-40"
+        readonly={false}
+      />
+    </div>
 
-          <Select.Root
-            type="single"
-            onValueChange={(e) => setOuputType(e as QrOutputType)}
-            value={outputType}
-          >
-            <Select.Trigger>
-              {outputTypes.find((e) => e === outputType)}
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Group>
-                {#each outputTypes as e}
-                  <Select.Item value={e} label={e} />
-                {/each}
-              </Select.Group>
-            </Select.Content>
-          </Select.Root>
-        </div>
+    <div class="flex gap-2">
+      <InformationInput
+        bind:value={qrOpts.mask}
+        title="Mask"
+        type="number"
+        placeholder="Enter mask here..."
+        foreGroundText="Available 0-7"
+        readonly={false}
+      />
 
-        <InformationInput
-          bind:value={qrOpts.version}
-          title="Version"
-          type="number"
-          class="flex-1"
-          placeholder="Enter version here..."
-          foreGroundText="Available 1-40"
-          readonly={false}
-        />
-      </div>
+      <InformationInput
+        bind:value={qrOpts.scale}
+        title="Scale"
+        type="number"
+        placeholder="Enter scale here..."
+        foreGroundText="Scale equals 2, each block will be 2x2 pixels"
+        readonly={outputType === "gif"}
+        disabled={outputType === "gif"}
+      />
+    </div>
 
-      <div class="flex gap-2">
-        <InformationInput
-          bind:value={qrOpts.mask}
-          title="Mask"
-          type="number"
-          placeholder="Enter mask here..."
-          foreGroundText="Available 0-7"
-          readonly={false}
-        />
+    <div class="flex justify-end">
+      <Button size="sm" variant="default" onclick={reset}>
+        Reset
 
-        <InformationInput
-          bind:value={qrOpts.scale}
-          title="Scale"
-          type="number"
-          placeholder="Enter scale here..."
-          foreGroundText="Scale equals 2, each block will be 2x2 pixels"
-          readonly={outputType === "gif"}
-          disabled={outputType === "gif"}
-        />
-      </div>
-
-      <div class="flex justify-end">
-        <Button size="sm" variant="default" onclick={reset}>
-          Reset
-
-          <RefreshCw />
-        </Button>
-      </div>
-    </Card.Content>
-  </Card.Root>
+        <RefreshCw />
+      </Button>
+    </div>
+  </AdvancedCard>
 
   {#if input}
-    <Card.Root class="flex flex-col flex-1 mt-3 h-fit">
-      <Card.Header>
-        <Card.Title>Result</Card.Title>
-      </Card.Header>
-
-      {#if generatedQR.value}
-        <Card.Content class="flex-1">
-          {#if outputType === "ascii"}
-            <pre class="font-mono">{generatedQR.value}</pre>
-          {:else if outputType === "gif"}
-            <img src={generatedQR.value} alt="" class="w-96" />
-          {:else}
-            <div class="bg-white w-96">
-              {@html generatedQR.value}
-            </div>
-          {/if}
-        </Card.Content>
-      {:else}
-        <Card.Content class="flex-1">
-          <p>{generatedQR.error}</p>
-        </Card.Content>
-      {/if}
-    </Card.Root>
+    <AdvancedCard title="Result" class="flex-1 mt-3 h-fit">
+      {#snippet bellowContent()}
+        {#if generatedQR.value}
+          <Card.Content class="flex-1 p-3">
+            {#if outputType === "ascii"}
+              <pre class="font-mono rounded-xl">{generatedQR.value}</pre>
+            {:else if outputType === "gif"}
+              <img src={generatedQR.value} alt="" class="w-96 rounded-xl" />
+            {:else}
+              <div class="bg-white w-96 rounded-xl">
+                {@html generatedQR.value}
+              </div>
+            {/if}
+          </Card.Content>
+        {:else}
+          <Card.Content class="flex-1 p-3 rounded-xl">
+            <p>{generatedQR.error}</p>
+          </Card.Content>
+        {/if}
+      {/snippet}
+    </AdvancedCard>
   {/if}
 </div>

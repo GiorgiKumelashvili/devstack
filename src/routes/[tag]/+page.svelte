@@ -34,6 +34,7 @@
         import("./onlydev/page-overflow-check.svelte"),
       "color-palette-generator-dev": () =>
         import("./onlydev/color-palette-generator-dev.svelte"),
+      "card-test": () => import("./onlydev/card-test.svelte"),
     }),
   };
 

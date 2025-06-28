@@ -1,6 +1,9 @@
 <script lang="ts">
   import Papa from "papaparse";
-  import { andromeda as andromedaTheme } from "@uiw/codemirror-themes-all";
+  import {
+    abcdef,
+    andromeda as andromedaTheme,
+  } from "@uiw/codemirror-themes-all";
   import jsyaml, { YAMLException } from "js-yaml";
   import { toast } from "svelte-sonner";
   import { minimalSetup } from "codemirror";
@@ -12,6 +15,7 @@
   import * as Select from "$lib/components/ui/select";
   import CopyIconButton from "$lib/components/advanced-ui/button/copy-icon-button.svelte";
   import { AdvancedCodeMirror } from "$lib/components/advanced-ui/codemirror";
+  import { AdvancedCard } from "$lib/components/advanced-ui/card";
 
   enum ConvertorType {
     YAML = "YAML",
@@ -197,108 +201,90 @@
 </script>
 
 <div class="flex gap-4 h-full">
-  <Card.Root class="flex-1 flex flex-col">
-    <Card.Header class="flex-row items-center justify-between">
-      <Card.Title>JSON View</Card.Title>
+  <AdvancedCard
+    title="JSON View"
+    class="flex-1"
+    opt2Value={jsonValue}
+    onClear={() => (jsonValue = "")}
+  >
+    <AdvancedCodeMirror
+      bind:value={jsonValue}
+      lineWrapping={true}
+      theme={abcdef}
+      basic={false}
+      extensions={[
+        minimalSetup,
+        placeholder("Enter json text here..."),
+        json(),
+      ]}
+      class="h-full border shadow rounded-xl custom-editor"
+      onReady={(e) => {
+        if (!e.hasFocus) {
+          e.focus();
+        }
+      }}
+      onChange={handleJsonEditorChange}
+    />
+  </AdvancedCard>
 
-      <div>
-        <CopyIconButton
-          variant="outline"
-          defaultDimenstions
-          opt2Value={jsonValue}
-        />
+  <AdvancedCard
+    title={selectedType + " View"}
+    class="flex-1"
+    opt2Value={selectedType === ConvertorType.YAML ? yamlValue : csvValue}
+  >
+    {#snippet additionalButtons()}
+      <div class="flex gap-3">
+        <Select.Root
+          type="single"
+          value={selectedType}
+          onValueChange={(e) => (selectedType = e as ConvertorType)}
+        >
+          <Select.Trigger class="w-[90px] h-7">
+            {selectedType}
+          </Select.Trigger>
+
+          <Select.Content>
+            <Select.Group>
+              <Select.GroupHeading>Convert To</Select.GroupHeading>
+              {#each Object.values(ConvertorType) as e}
+                <Select.Item value={e} label={e} />
+              {/each}
+            </Select.Group>
+          </Select.Content>
+        </Select.Root>
       </div>
-    </Card.Header>
+    {/snippet}
 
-    <Card.Content class="flex-1 overflow-auto">
+    {#if selectedType === ConvertorType.YAML}
       <AdvancedCodeMirror
-        bind:value={jsonValue}
+        bind:value={yamlValue}
         lineWrapping={true}
-        theme={andromedaTheme}
+        theme={abcdef}
         basic={false}
         extensions={[
           minimalSetup,
-          placeholder("Enter json text here..."),
-          json(),
+          placeholder(`Enter yaml text here...`),
+          yaml(),
         ]}
-        class="h-full border-white custom-editor"
-        onReady={(e) => {
-          if (!e.hasFocus) {
-            e.focus();
-          }
-        }}
-        onChange={handleJsonEditorChange}
+        class="h-full border shadow rounded-xl custom-editor"
+        onChange={handleYamlEditorChange}
       />
-    </Card.Content>
-  </Card.Root>
-
-  <div class="flex flex-1 flex-col gap-4">
-    <Card.Root class="flex flex-1 basis-0 flex-col overflow-auto">
-      <Card.Header class="flex-row items-center justify-between">
-        <Card.Title>{selectedType} View</Card.Title>
-
-        <div class="flex gap-2">
-          <Select.Root
-            type="single"
-            value={selectedType}
-            onValueChange={(e) => (selectedType = e as ConvertorType)}
-          >
-            <Select.Trigger class="w-[90px]">
-              {selectedType}
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Group>
-                <Select.GroupHeading>Convert To</Select.GroupHeading>
-                {#each Object.values(ConvertorType) as e}
-                  <Select.Item value={e} label={e} />
-                {/each}
-              </Select.Group>
-            </Select.Content>
-          </Select.Root>
-
-          <div class="fle">
-            <CopyIconButton
-              variant="outline"
-              defaultDimenstions
-              opt2Value={yamlValue}
-            />
-          </div>
-        </div>
-      </Card.Header>
-
-      <Card.Content class="flex-1 overflow-auto">
-        {#if selectedType === ConvertorType.YAML}
-          <AdvancedCodeMirror
-            bind:value={yamlValue}
-            lineWrapping={true}
-            theme={andromedaTheme}
-            basic={false}
-            extensions={[
-              minimalSetup,
-              placeholder(`Enter yaml text here...`),
-              yaml(),
-            ]}
-            class="h-full border-white custom-editor"
-            onChange={handleYamlEditorChange}
-          />
-        {:else}
-          <textarea
-            class="w-full h-full rounded-md outline-none p-2 resize-none bg-[#23262E] font-mono text-[#D5CED9] text-area-font"
-            placeholder="Enter csv text here..."
-            oninput={handleCsvEditorChange}
-            bind:value={csvValue}
-          ></textarea>
-        {/if}
-      </Card.Content>
-    </Card.Root>
-  </div>
+    {:else}
+      <textarea
+        class="w-full h-full rounded-md outline-none p-2 resize-none bg-secondary font-mono text-[#D5CED9] text-area-font"
+        placeholder="Enter csv text here..."
+        oninput={handleCsvEditorChange}
+        bind:value={csvValue}
+      ></textarea>
+    {/if}
+  </AdvancedCard>
 </div>
 
 <style>
   :global .custom-editor .cm-editor {
     height: 100%;
-    border-radius: 6px !important;
-    padding: 3px !important;
+    border-radius: 10px !important;
+    padding: 4px !important;
     max-height: none;
   }
 

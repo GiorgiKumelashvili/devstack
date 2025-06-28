@@ -19,6 +19,7 @@
     generateTetradic,
     generateTriadic,
   } from "./utils/color-palette";
+  import { AdvancedCard } from "$lib/components/advanced-ui/card";
 
   type ColorModel = keyof typeof converts | "hexa";
 
@@ -118,82 +119,74 @@
     </Tabs.List>
 
     <Tabs.Content value="input">
-      <Card.Root class="h-[420px]">
-        <div class="flex p-6 pb-0 flex-row justify-between">
-          <div class="flex flex-col">
-            <Card.Title>Input color code</Card.Title>
-            <Card.Description class="pt-1.5">
-              Multiple color spaces are supported
-            </Card.Description>
+      <AdvancedCard class="h-[394px]">
+        {#snippet titleContent()}
+          <div class="flex-1 flex flex-row justify-between">
+            <div class="flex flex-col">
+              <Card.Title class="text-xl">Input color code</Card.Title>
+              <Card.Description class="pt-1.5">
+                Multiple color spaces are supported
+              </Card.Description>
+            </div>
+
+            <button
+              class="w-11 h-11 cursor-pointer rounded-sm hover:opacity-80 focus:opacity-60 active:opacity-60"
+              style={`background-color: ${colorInstance.hexa().toString()}`}
+              onclick={copyColor}
+              type="button"
+              aria-label="Copy to clipboard"
+            >
+            </button>
           </div>
+        {/snippet}
 
-          <button
-            class="w-10 h-10 cursor-pointer rounded-sm hover:opacity-80 focus:opacity-60 active:opacity-60"
-            style={`background-color: ${colorInstance.hexa().toString()}`}
-            onclick={copyColor}
-            type="button"
-            aria-label="Copy to clipboard"
-          >
-          </button>
-        </div>
+        <AdvancedInput
+          bind:setErrorMessage={colorConversionError}
+          bind:value={() => color, (v) => setColor(v)}
+        />
 
-        <Card.Content>
-          <AdvancedInput
-            bind:setErrorMessage={colorConversionError}
-            bind:value={() => color, (v) => setColor(v)}
-          />
-
-          <Card.Description class="pt-1.5 pl-0.5">
-            rgba/hexa/hsla/hsv/cmyk
-          </Card.Description>
-        </Card.Content>
-      </Card.Root>
+        <Card.Description class="pt-1.5 pl-0.5">
+          rgba/hexa/hsla/hsv/cmyk
+        </Card.Description>
+      </AdvancedCard>
     </Tabs.Content>
 
     <Tabs.Content value="color-picker">
-      <Card.Root class="h-[420px]">
-        <Card.Header>
-          <Card.Title>Picker</Card.Title>
-        </Card.Header>
-
-        <Card.Content>
-          <div class="dark">
-            <AdvancedColorPicker bind:hex={color} />
-          </div>
-        </Card.Content>
-      </Card.Root>
+      <AdvancedCard title="Color Picker" class="h-[394px]">
+        <AdvancedColorPicker bind:hex={color} />
+      </AdvancedCard>
     </Tabs.Content>
   </Tabs.Root>
 
-  <Card.Root class="flex-1">
-    <Card.Header>
-      <Card.Title class="text-2xl">Output</Card.Title>
-    </Card.Header>
-
-    <Card.Content class="flex gap-4">
+  <AdvancedCard
+    title="Output"
+    class="flex-1"
+    contentClass="flex flex-col gap-6 pt-4"
+  >
+    <div class="flex gap-4">
       {@render ColorInputItem({ title: "RGBA", model: "rgb" })}
       {@render ColorInputItem({ title: "CMYK", model: "cmyk" })}
       {@render ColorInputItem({ title: "HSLA", model: "hsl" })}
-    </Card.Content>
+    </div>
 
-    <Card.Content class="flex gap-4 pt-0">
+    <div class="flex gap-4 pt-0">
       {@render ColorInputItem({ title: "HEX", model: "hex" })}
       {@render ColorInputItem({ title: "HEXA", model: "hexa" })}
       {@render ColorInputItem({ title: "HSV", model: "hsv" })}
-    </Card.Content>
+    </div>
 
-    <Card.Content class="flex gap-4 pt-0">
+    <div class="flex gap-4 pt-0">
       {@render ColorInputItem({ title: "LCHA", model: "lch" })}
       {@render ColorInputItem({ title: "LAB", model: "lab" })}
       {@render ColorInputItem({ title: "HCGA", model: "hcg" })}
-    </Card.Content>
+    </div>
 
-    <Card.Content class="flex gap-4 pt-0">
+    <div class="flex gap-4 pt-0">
       {@render ColorInputItem({ title: "ANSI16", model: "ansi16" })}
       {@render ColorInputItem({ title: "ANSI256", model: "ansi256" })}
       {@render ColorInputItem({ title: "HWBA", model: "hwb" })}
-    </Card.Content>
-  </Card.Root>
+    </div>
+  </AdvancedCard>
 </div>
 
 <div class="flex gap-4 mt-4">

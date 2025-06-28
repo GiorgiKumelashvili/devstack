@@ -10,8 +10,13 @@ export const utilItems: UtilItem[] = $state([
       url: "#",
       tag: 'onlydev',
       icon: VenetianMask,
-      isActive: true,
+      isActive: false,
       items: [
+        {
+          title: "Card test",
+          url: "card-test",
+          tag: 'card-test'
+        },
         {
           title: "Page Overflow Check",
           url: "page-overflow-check",
@@ -78,7 +83,7 @@ export const utilItems: UtilItem[] = $state([
     url: "#",
     tag: "color",
     icon: TypeOutline,
-    isActive: true,
+    isActive: false,
     items: [
       {
         title: "JSON format",
@@ -112,7 +117,7 @@ export const utilItems: UtilItem[] = $state([
     url: "#",
     tag: "icons",
     icon: Boxes,
-    isActive: true,
+    isActive: false,
     items: [
       {
         title: "All",
@@ -126,7 +131,7 @@ export const utilItems: UtilItem[] = $state([
     url: "#",
     tag: "conversions",
     icon: PencilRuler,
-    isActive: true,
+    isActive: false,
     items: [
       {
         title: "Json Yaml Csv",
@@ -140,7 +145,7 @@ export const utilItems: UtilItem[] = $state([
     url: "#",
     tag: "misc",
     icon: CircleEllipsis,
-    isActive: true,
+    isActive: false,
     items: [
       {
         title: "JWT",

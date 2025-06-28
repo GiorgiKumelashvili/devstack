@@ -22,6 +22,7 @@
   import { AdvancedCodeMirror } from "$lib/components/advanced-ui/codemirror";
   import { successToast } from "$lib/utils";
   import { type EitherVal } from "../../../types";
+  import AdvancedCard from "$lib/components/advanced-ui/card/advanced-card.svelte";
 
   type DecodedJWTValue = EitherVal<{
     payload: JWTPayload;
@@ -110,61 +111,62 @@
     </Tabs.List>
 
     <Tabs.Content value="decoder">
-      <Card.Root class="min-h-[420px] flex overflow-auto">
-        <Card.Content class="flex-1 flex flex-col gap-3 p-0 relative">
-          <div class="flex-1 overflow-auto">
-            <AdvancedCodeMirror
-              bind:value={jwtInput}
-              lineWrapping={true}
-              theme={abcdef}
-              basic={false}
-              extensions={[
-                minimalSetup,
-                placeholder("Enter jwt payload here..."),
-              ]}
-              class="h-full border-white custom-editor full-editor"
-              onReady={(e) => {
-                if (!e.hasFocus) {
-                  e.focus();
-                }
-              }}
-            />
-          </div>
+      <AdvancedCard
+        class="min-h-[370px]"
+        contentClass="flex-1 flex flex-col gap-3 p-0 relative"
+      >
+        <div class="flex-1 overflow-auto">
+          <AdvancedCodeMirror
+            bind:value={jwtInput}
+            lineWrapping={true}
+            theme={abcdef}
+            basic={false}
+            extensions={[
+              minimalSetup,
+              placeholder("Enter jwt payload here..."),
+            ]}
+            class="h-full border-white custom-editor full-editor"
+            onReady={(e) => {
+              if (!e.hasFocus) {
+                e.focus();
+              }
+            }}
+          />
+        </div>
 
-          {#await decoded then result}
-            {#if result.error || (jwtSecret && result.value?.isSignatureValid === false)}
-              <Alert.Root
-                variant="destructive"
-                class="absolute z-10 bottom-3 left-3 right-3 w-auto"
-              >
-                <TriangleAlert class="h-4 w-4" />
-                <Alert.Title>Error</Alert.Title>
-                <Alert.Description>
-                  {result.value ? "Invalid Signature" : result.error}
-                </Alert.Description>
-              </Alert.Root>
-            {/if}
-          {/await}
+        {#await decoded then result}
+          {#if result.error || (jwtSecret && result.value?.isSignatureValid === false)}
+            <Alert.Root
+              variant="destructive"
+              class="absolute z-10 bottom-3 left-3 right-3 w-auto"
+            >
+              <TriangleAlert class="h-4 w-4" />
+              <Alert.Title>Error</Alert.Title>
+              <Alert.Description>
+                {result.value ? "Invalid Signature" : result.error}
+              </Alert.Description>
+            </Alert.Root>
+          {/if}
+        {/await}
 
-          {#await decoded then result}
-            {#if jwtSecret && result.value?.isSignatureValid === true}
-              <Alert.Root
-                variant="default"
-                class="absolute z-10 bottom-3 left-3 right-3 w-auto"
-              >
-                <BadgeCheck class="h-4 w-4" />
-                <Alert.Title>Success</Alert.Title>
-                <Alert.Description>Signature is valid</Alert.Description>
-              </Alert.Root>
-            {/if}
-          {/await}
-        </Card.Content>
-      </Card.Root>
+        {#await decoded then result}
+          {#if jwtSecret && result.value?.isSignatureValid === true}
+            <Alert.Root
+              variant="default"
+              class="absolute z-10 bottom-3 left-3 right-3 w-auto"
+            >
+              <BadgeCheck class="h-4 w-4" />
+              <Alert.Title>Success</Alert.Title>
+              <Alert.Description>Signature is valid</Alert.Description>
+            </Alert.Root>
+          {/if}
+        {/await}
+      </AdvancedCard>
     </Tabs.Content>
 
     <Tabs.Content value="encoder">
       <Card.Content
-        class="min-h-[420px] flex-1 flex flex-col gap-4 overflow-auto pb-0"
+        class="min-h-[370px] flex-1 flex flex-col gap-4 overflow-auto p-0 pt-4"
       >
         <div class="flex flex-col flex-1">
           <Label class="block mb-2">Header: Algorithm & Token Type</Label>
@@ -176,7 +178,7 @@
             basic={false}
             readonly={false}
             extensions={[minimalSetup, json()]}
-            class="border border-white/50 rounded-md custom-editor h-full"
+            class="border shadow rounded-md custom-editor h-full"
           />
         </div>
 
@@ -190,7 +192,7 @@
             basic={false}
             readonly={false}
             extensions={[minimalSetup, json()]}
-            class="border border-white/50 rounded-md custom-editor h-full"
+            class="border shadow rounded-md custom-editor h-full"
           />
         </div>
 
@@ -207,7 +209,7 @@
               minimalSetup,
               placeholder("Enter the secret used to sign the JWT..."),
             ]}
-            class="border border-white/50 rounded-md custom-editor h-full flex-1"
+            class="border shadow rounded-md custom-editor h-full flex-1"
           />
         </div>
       </Card.Content>
@@ -231,7 +233,7 @@
                 basic={false}
                 readonly={true}
                 extensions={[minimalSetup, json()]}
-                class="border border-white/50 rounded-md custom-editor h-full"
+                class="border shadow rounded-md custom-editor h-full"
               />
             </div>
           {/await}
@@ -249,7 +251,7 @@
                 basic={false}
                 readonly={true}
                 extensions={[minimalSetup, json()]}
-                class="border border-white/50 rounded-md custom-editor h-full"
+                class="border shadow rounded-md custom-editor h-full"
               />
             </div>
           {/await}
@@ -267,15 +269,15 @@
                 minimalSetup,
                 placeholder("Enter the secret used to sign the JWT..."),
               ]}
-              class="border border-white/50 rounded-md custom-editor h-full"
+              class="border shadow rounded-md custom-editor h-full"
             />
           </div>
         </Card.Content>
       {:else}
-        <Card.Root class="flex overflow-auto flex-1">
-          <Card.Content class="w-full">
-            <div class="flex-1 overflow-auto">
-              <div class="flex justify-between items-center pb-3 h-10">
+        <Card.Root class="flex overflow-auto flex-1 bg-[#0F0F0F]">
+          <Card.Content class="w-full flex">
+            <div class="flex-1 overflow-auto flex flex-col">
+              <div class="flex justify-between items-center pb-3 h-10 pt-1">
                 <Label class="block mb-2">JSON WEB TOKEN</Label>
 
                 {#await encoded then result}
@@ -293,22 +295,18 @@
 
               {#await encoded then result}
                 {#if result.value}
-                  <AdvancedCodeMirror
-                    value={result.value ?? ""}
-                    lineWrapping={true}
-                    theme={abcdef}
-                    basic={false}
-                    readonly={true}
-                    extensions={[minimalSetup]}
-                    class="rounded-md custom-editor h-full overflow-auto encode-output-editor"
-                  />
+                  <textarea
+                    class="w-full flex-1 font-mono bg-transparent font-thin text-sm outline-none resize-none"
+                    readonly
+                    name="jwt result">{result.value ?? ""}</textarea
+                  >
                 {/if}
               {/await}
             </div>
 
             {#await encoded then result}
               {#if result.error}
-                <Alert.Root variant="destructive">
+                <Alert.Root variant="destructive" class="h-fit">
                   <Alert.Description>
                     {result.error}
                   </Alert.Description>
@@ -325,8 +323,8 @@
 <style>
   :global .custom-editor .cm-editor {
     height: 100%;
-    border-radius: 6px !important;
-    padding: 3px !important;
+    border-radius: 10px !important;
+    padding: 4px !important;
     max-height: none;
   }
 

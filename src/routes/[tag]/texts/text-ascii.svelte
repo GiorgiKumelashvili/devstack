@@ -3,18 +3,18 @@
   import { invoke } from "@tauri-apps/api/core";
   import { open } from "@tauri-apps/plugin-dialog";
   import { listen } from "@tauri-apps/api/event";
+  import { readDir } from "@tauri-apps/plugin-fs";
+  import { BaseDirectory, resolveResource } from "@tauri-apps/api/path";
 
   import * as Card from "$lib/components/ui/card";
   import * as Select from "$lib/components/ui/select";
-  import CopyIconButton from "$lib/components/advanced-ui/button/copy-icon-button.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
   import { Button } from "$lib/components/ui/button";
   import { parseIpcPayload } from "$lib/utils";
+  import BrowserLink from "$lib/components/advanced-ui/link/browser-link.svelte";
+  import AdvancedCard from "$lib/components/advanced-ui/card/advanced-card.svelte";
 
   import type { IpcResponse } from "../../../types";
-  import BrowserLink from "$lib/components/advanced-ui/link/browser-link.svelte";
-  import { BaseDirectory, resolveResource } from "@tauri-apps/api/path";
-  import { readDir } from "@tauri-apps/plugin-fs";
 
   type FigletDropdownItem = {
     path: string;
@@ -147,21 +147,23 @@
 </script>
 
 <div class="flex flex-col gap-4 h-full w-full">
-  <Card.Root>
-    <Card.Header>
-      <Card.Title>Figlet Text Input</Card.Title>
-      <Card.Description>
-        For more figlet go to this links
-        <BrowserLink url="https://github.com/xero/figlet-fonts">
-          figlet-fonts
-        </BrowserLink>{","}
-        <BrowserLink url="https://github.com/inteist/figlet-fonts-gallery">
-          figlet-fonts-gallery
-        </BrowserLink>
-      </Card.Description>
-    </Card.Header>
+  <AdvancedCard>
+    {#snippet titleContent()}
+      <div class="flex flex-col gap-1.5">
+        <Card.Title class="text-xl">Figlet Text Input</Card.Title>
+        <Card.Description>
+          For more figlet go to this links
+          <BrowserLink url="https://github.com/xero/figlet-fonts">
+            figlet-fonts
+          </BrowserLink>{","}
+          <BrowserLink url="https://github.com/inteist/figlet-fonts-gallery">
+            figlet-fonts-gallery
+          </BrowserLink>
+        </Card.Description>
+      </div>
+    {/snippet}
 
-    <Card.Content class="flex-1 overflow-auto flex gap-3">
+    <div class="flex gap-2">
       <Input
         value={input}
         placeholder="Input text"
@@ -189,28 +191,20 @@
       </Select.Root>
 
       <Button onclick={addFlfFont}>Add font (*.flf)</Button>
-    </Card.Content>
-  </Card.Root>
+    </div>
+  </AdvancedCard>
 
   {#if value}
-    <Card.Root class="flex flex-1 overflow-auto relative">
-      <CopyIconButton
-        class="absolute top-2 right-2"
-        defaultDimenstions
-        opt2Value={value?.data}
-      />
+    <AdvancedCard opt2Value={value?.data} class="flex-1 overflow-auto relative">
+      {#if value?.data}
+        <!-- ! Very important don't add anything inside pre like space or indentation, will mess up figlets and must be exactly like this -->
+        <pre class="font-mono">{value.data}</pre>
+      {/if}
 
-      <Card.Content class="flex-1 overflow-x-auto">
-        {#if value?.data}
-          <!-- ! Very important don't add anything inside pre like space od indentation, will mess up figlets and must be exactly like this -->
-          <pre class="font-mono">{value.data}</pre>
-        {/if}
-
-        {#if value?.error}
-          <h1 class="text-3xl">{value.error.message}</h1>
-        {/if}
-      </Card.Content>
-    </Card.Root>
+      {#if value?.error}
+        <h1 class="text-3xl">{value.error.message}</h1>
+      {/if}
+    </AdvancedCard>
   {/if}
 </div>
 

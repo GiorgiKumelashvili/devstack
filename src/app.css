@@ -37,7 +37,7 @@
   }
 
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 0 0% 8%;
     --foreground: 0 0% 98%;
 
     --muted: 0 0% 14.9%;
@@ -55,7 +55,7 @@
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
 
-    --secondary: 0 0% 14.9%;
+    --secondary: 0 0% 6.5%;
     --secondary-foreground: 0 0% 98%;
 
     --accent: 0 0% 14.9%;

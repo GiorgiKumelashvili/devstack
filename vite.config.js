@@ -3,12 +3,13 @@
 import { sveltekit } from "@sveltejs/kit/vite";
 import path from "path";
 import { defineConfig } from "vite";
+import devtoolsJson from 'vite-plugin-devtools-json';
 
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [await sveltekit()],
+  plugins: [sveltekit(), devtoolsJson()],
 
   build: {
     rollupOptions: {
@@ -51,10 +52,10 @@ export default defineConfig(async () => ({
     host: host || false,
     hmr: host
       ? {
-          protocol: "ws",
-          host,
-          port: 1421,
-        }
+        protocol: "ws",
+        host,
+        port: 1421,
+      }
       : undefined,
     watch: {
       // 3. tell vite to ignore watching `src-tauri`

@@ -9,9 +9,14 @@ import { twMerge } from "tailwind-merge";
 
 import type { IpcResponse } from "../types";
 
-export function cn(...inputs: ClassValue[]) {
+export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
 }
+
+export const exists = <T>(val: T | undefined): val is T => {
+  return val !== undefined;
+}
+
 
 export const parseIpcPayload = <T = string>(
   event: Event<string>,
@@ -28,7 +33,7 @@ export const getIfDesktop = <T>(value: T): T[] => {
 
   return [];
 };
-export function roundFloat(value: number, precision: number) {
+export const roundFloat = (value: number, precision: number) => {
   return Math.round(value * 10 ** precision) / 10 ** precision;
 }
 

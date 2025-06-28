@@ -1,10 +1,18 @@
 <script lang="ts">
+  import clsx from "clsx";
+  import { ChevronRight } from "lucide-svelte";
+  import { page } from "$app/state";
+
   import * as Collapsible from "$lib/components/ui/collapsible";
   import * as Sidebar from "$lib/components/ui/sidebar";
-  import ChevronRight from "lucide-svelte/icons/chevron-right";
-  import type { UtilItem } from "../../types";
+
+  import { type UtilItem, type UtilSubItem } from "../../types";
 
   const { items }: { items: UtilItem[] } = $props();
+
+  const isActive = (item: UtilSubItem) => {
+    return item.tag === page.params?.tag;
+  };
 </script>
 
 <Sidebar.Group>
@@ -34,17 +42,18 @@
               {#if mainItem.items}
                 <Sidebar.MenuSub>
                   {#each mainItem.items as subItem (subItem.title)}
-                    <Sidebar.MenuSubItem class="active:scale-95">
-                      <Sidebar.MenuSubButton>
-                        {#snippet child({ props })}
-                          <a href={subItem.url} {...props}>
-                            <span>
-                              <!-- <span class="text-primary">#</span> -->
-                              <span class="text-red-400">#</span>
-                              {subItem.title}
-                            </span>
-                          </a>
-                        {/snippet}
+                    <Sidebar.MenuSubItem>
+                      <Sidebar.MenuSubButton
+                        class={clsx(
+                          isActive(subItem)
+                            ? "bg-primary/10"
+                            : "hover:bg-primary/5",
+                        )}
+                        href={subItem.tag}
+                      >
+                        <span>
+                          {subItem.title}
+                        </span>
                       </Sidebar.MenuSubButton>
                     </Sidebar.MenuSubItem>
                   {/each}

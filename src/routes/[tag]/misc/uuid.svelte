@@ -7,7 +7,8 @@
   import * as Popover from "$lib/components/ui/popover";
   import { Button } from "$lib/components/ui/button";
   import { Label } from "$lib/components/ui/label";
-  import InformationInput from "$lib/components/advanced-ui/information-input.svelte";
+  import InformationInput from "$lib/components/advanced-ui/input/information-input.svelte";
+  import AdvancedCard from "$lib/components/advanced-ui/card/advanced-card.svelte";
 
   let input = $state("");
   let errorMessage = $state("");
@@ -134,94 +135,89 @@
 </script>
 
 <div class="flex gap-4">
-  <Card.Root class="flex-1">
-    <Card.Header>
-      <div class="flex justify-between">
-        <Card.Title>Generate Random</Card.Title>
+  <AdvancedCard
+    title="Generate Random"
+    class="flex-1"
+    contentClass="flex flex-col gap-3"
+  >
+    {#snippet additionalButtons()}
+      <Button size="sm" variant="default" onclick={regenerate} class="h-7">
+        Refresh
 
-        <Button size="sm" variant="default" onclick={regenerate}>
-          Refresh
+        <RefreshCw />
+      </Button>
+    {/snippet}
 
-          <RefreshCw />
-        </Button>
-      </div>
-    </Card.Header>
+    <div class="flex gap-3">
+      <InformationInput title="V4 Random UUID" value={randomUUIDs.v4} />
+    </div>
 
-    <Card.Content class="flex flex-col gap-5">
-      <div class="flex gap-2">
-        <InformationInput title="V4 Random UUID" value={randomUUIDs.v4} />
-      </div>
+    <div class="flex gap-3">
+      <InformationInput title="V3" value={forV3.value} />
 
-      <div class="flex gap-2">
-        <InformationInput title="V3" value={forV3.value} />
+      <InformationInput
+        title="Name"
+        bind:value={forV3.name}
+        foreGroundText="For v3"
+        readonly={false}
+      />
 
-        <InformationInput
-          title="Name"
-          bind:value={forV3.name}
-          foreGroundText="For v3"
-          readonly={false}
-        />
+      <InformationInput
+        title="Namespace"
+        bind:value={forV3.namespace}
+        foreGroundText="For v3"
+        readonly={false}
+      />
+    </div>
 
-        <InformationInput
-          title="Namespace"
-          bind:value={forV3.namespace}
-          foreGroundText="For v3"
-          readonly={false}
-        />
-      </div>
+    <div class="flex gap-3">
+      <InformationInput title="V5" value={forV5.value} />
 
-      <div class="flex gap-2">
-        <InformationInput title="V5" value={forV5.value} />
+      <InformationInput
+        title="Name"
+        bind:value={forV5.name}
+        foreGroundText="For v5"
+        readonly={false}
+      />
 
-        <InformationInput
-          title="Name"
-          bind:value={forV5.name}
-          foreGroundText="For v5"
-          readonly={false}
-        />
+      <InformationInput
+        title="Namespace"
+        bind:value={forV5.namespace}
+        foreGroundText="For v5"
+        readonly={false}
+      />
+    </div>
 
-        <InformationInput
-          title="Namespace"
-          bind:value={forV5.namespace}
-          foreGroundText="For v5"
-          readonly={false}
-        />
-      </div>
+    <div class="flex gap-3">
+      <InformationInput title="V1" value={randomUUIDs.v1} />
+      <InformationInput title="V6" value={randomUUIDs.v6} />
+      <InformationInput title="V7" value={randomUUIDs.v7} />
+    </div>
 
-      <div class="flex gap-2">
-        <InformationInput title="V1" value={randomUUIDs.v1} />
-        <InformationInput title="V6" value={randomUUIDs.v6} />
-        <InformationInput title="V7" value={randomUUIDs.v7} />
-      </div>
-
-      <div class="flex gap-2">
-        <InformationInput title="MAX" value={MAX} />
-        <InformationInput title="NIL" value={NIL} />
-      </div>
-    </Card.Content>
-  </Card.Root>
+    <div class="flex gap-3">
+      <InformationInput title="MAX" value={MAX} />
+      <InformationInput title="NIL" value={NIL} />
+    </div>
+  </AdvancedCard>
 </div>
 
 <div class="flex gap-4">
-  <Card.Root class="w-[450px] flex flex-col mt-3 h-fit">
-    <Card.Header class="flex-row justify-between">
-      <Card.Title>Parse UUID</Card.Title>
-    </Card.Header>
+  <AdvancedCard class="w-[450px] mt-3 h-fit" title="Parse UUID">
+    <InformationInput
+      bind:value={input}
+      readonly={false}
+      erroMsg={errorMessage}
+      title="UUID"
+      foreGroundText={inputVersion ? `UUID Version: ${inputVersion}` : ""}
+      placeholder="Enter uuid here..."
+    />
+  </AdvancedCard>
 
-    <Card.Content class="flex-1">
-      <InformationInput
-        bind:value={input}
-        readonly={false}
-        erroMsg={errorMessage}
-        title="UUID"
-        foreGroundText={inputVersion ? `UUID Version: ${inputVersion}` : ""}
-        placeholder="Enter uuid here..."
-      />
-    </Card.Content>
-  </Card.Root>
-
-  <Card.Root class="flex flex-col flex-1 mt-3">
-    <Card.Header class="flex-row justify-between">
+  <AdvancedCard
+    class="flex-1 mt-3 h-fit"
+    contentClass="flex-1 flex items-end gap-3"
+  >
+    {#snippet titleContent()}
       <Card.Title class="flex gap-1">
         Generate Multiple
         <Popover.Root>
@@ -240,51 +236,49 @@
           </Popover.Content>
         </Popover.Root>
       </Card.Title>
-    </Card.Header>
+    {/snippet}
 
-    <Card.Content class="flex-1 flex items-end gap-2">
-      <InformationInput
-        bind:value={amountOfUUIDs}
-        title="Amount"
-        type="number"
-        placeholder="Enter amount here..."
-        readonly={false}
-        erroMsg={errorMessage}
-        foreGroundText={inputVersion ? `UUID Version: ${inputVersion}` : ""}
-      />
+    {#snippet bellowContent()}
+      {#if generatedUUIDs.length}
+        <Card.Content class="flex-1 flex flex-col pt-0 gap-3">
+          {#each generatedUUIDs as uuid}
+            <div>{uuid}</div>
+          {/each}
+        </Card.Content>
+      {/if}
+    {/snippet}
 
-      <div>
-        <Label class="block pb-1.5 opacity-85 font-bold text-red-400">
-          Select Version
-        </Label>
+    <InformationInput
+      bind:value={amountOfUUIDs}
+      title="Amount"
+      type="number"
+      placeholder="Enter amount here..."
+      readonly={false}
+    />
 
-        <Select.Root
-          type="single"
-          onValueChange={onVersionChange}
-          value={selectedVersion.toString()}
-        >
-          <Select.Trigger class="w-[180px]">
-            {availableVersions.find((e) => e.value === selectedVersion)?.label}
-          </Select.Trigger>
-          <Select.Content>
-            <Select.Group>
-              {#each availableVersions as e}
-                <Select.Item value={e.value.toString()} label={e.label} />
-              {/each}
-            </Select.Group>
-          </Select.Content>
-        </Select.Root>
-      </div>
+    <div>
+      <Label class="block pb-1.5 opacity-85 font-bold text-red-400">
+        Select Version
+      </Label>
 
-      <Button onclick={generateMultiple}>Generate</Button>
-    </Card.Content>
+      <Select.Root
+        type="single"
+        onValueChange={onVersionChange}
+        value={selectedVersion.toString()}
+      >
+        <Select.Trigger class="w-[180px]">
+          {availableVersions.find((e) => e.value === selectedVersion)?.label}
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Group>
+            {#each availableVersions as e}
+              <Select.Item value={e.value.toString()} label={e.label} />
+            {/each}
+          </Select.Group>
+        </Select.Content>
+      </Select.Root>
+    </div>
 
-    {#if generatedUUIDs.length}
-      <Card.Content class="flex-1 flex flex-col pt-0 gap-2">
-        {#each generatedUUIDs as uuid}
-          <div>{uuid}</div>
-        {/each}
-      </Card.Content>
-    {/if}
-  </Card.Root>
+    <Button onclick={generateMultiple}>Generate</Button>
+  </AdvancedCard>
 </div>

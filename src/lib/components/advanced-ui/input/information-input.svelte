@@ -46,7 +46,7 @@
   />
 
   {#if erroMsg}
-    <p class="text-sm text-red-500">{erroMsg}</p>
+    <p class="text-sm text-red-500 pt-0.5">{erroMsg}</p>
   {/if}
 
   {#if foreGroundText}

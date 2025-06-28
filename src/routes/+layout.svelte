@@ -3,15 +3,7 @@
 
   import { toggleMode } from "mode-watcher";
   import { ModeWatcher } from "mode-watcher";
-  import {
-    ChevronLeft,
-    ChevronRight,
-    Sun,
-    Moon,
-    House,
-    Home,
-    Settings,
-  } from "lucide-svelte";
+  import { ChevronLeft, ChevronRight, Sun, Moon } from "lucide-svelte";
   import { page } from "$app/state";
   import { findTagTitle } from "$state/util-items.svelte";
 
